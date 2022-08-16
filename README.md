@@ -25,6 +25,10 @@ cd nebula-control/ca; nebula-cert ca -name "<name>" -duration 43834h
 ```
 
 3. Add existing ligthouse and client IPs to `nebula-control/hosts/ip_list.yml`.
+```
+[lighthouses|clients]:
+    <nebula_ip>: <public_ip>:<port>
+```
 
 ## Actions
 ### Add non-lighthouse client to network
