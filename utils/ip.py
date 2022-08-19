@@ -12,7 +12,7 @@ import os
 import yaml
 import ipaddress
 
-IP_YML_PATH = os.path.expanduser("~/nebula/hosts/ip_list.yml")
+IP_YML_PATH = "store/ip_list.yml"
 
 # load used IP YML
 def load_IP_yml(ip_yml_path):
@@ -38,7 +38,9 @@ def increment_IP(ip):
     return ipaddress.IPv4Address(ip) + 1
 
 
-if __name__ == "__main__":
+# get new IP address
+def get_new_IP(range=None):
+    # TODO: implement IP range input for differentiating between lighthouses and clients
     ip_yml = load_IP_yml(IP_YML_PATH)
     
     if not ip_yml["clients"]:
@@ -47,4 +49,8 @@ if __name__ == "__main__":
         latest_IP = fetch_latest_IP(list(ip_yml["clients"].keys()))
         new_IP = increment_IP(latest_IP)
 
-    print(new_IP, end="")  # send generated IP to stdout
+    return new_IP
+
+
+if __name__ == "__main__":
+    print(get_new_IP(), end="")  # send generated IP to stdout
