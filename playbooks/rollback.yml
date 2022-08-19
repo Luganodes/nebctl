@@ -1,0 +1,54 @@
+---
+
+- hosts: localhost
+  tasks:
+    - name: Add target node to in-memory inventory
+      add_host:
+        name: "{{ public_ip }}"
+        groups: target_nodes
+        ansible_user: "{{ ssh_user | default('root') }}"
+        ansible_ssh_port: "{{ ssh_port | default('22') }}"
+
+- name: Remove node from admin panel
+  hosts: localhost
+  tasks:
+    - name: Delete node directory
+      file:
+        path: "{{ nebula_control_dir }}/hosts/{{ node_name }}"
+        state: absent
+      ignore_errors: yes
+
+- name: Undo changes on the target node
+  hosts: target_nodes
+  tasks:
+    - name: Disable and stop Nebula service
+      systemd:
+        name: nebula
+        enabled: false
+        state: stopped
+      ignore_errors: yes
+
+    - name: Delete config directory
+      file:
+        path: /etc/nebula
+        state: absent
+      ignore_errors: yes
+
+    - name: Delete Nebula binaries
+      file:
+        path: "/usr/bin/{{ item }}"
+        state: absent
+      with_items:
+        - nebula
+        - nebula-cert
+      ignore_errors: yes
+
+    - name: Delete Nebula service files
+      file:
+        path: /etc/systemd/system/nebula.service
+        state: absent
+      ignore_errors: yes
+
+    - name: Reset UFW rules
+      ufw:
+        state: reset
