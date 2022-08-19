@@ -1,2 +1,4 @@
-ca/*
+ca/
+hosts/
+store/
 **/__pycache__/

@@ -12,19 +12,18 @@
 - name: Add node to admin panel
   hosts: localhost
   vars:
-    nebula_dir: /home/nebula/nebula
-    ip_list: /home/nebula/nebula/store/ip_list.yml
+    ip_list: "{{ nebula_control_dir }}/store/ip_list.yml"
   tasks:
     - name: Create node directory
       file:
-        path: "{{ nebula_dir }}/hosts/{{ node_name }}"
+        path: "{{ nebula_control_dir }}/hosts/{{ node_name }}"
         state: directory
 
     - name: Sign certificates
-      command: nebula-cert sign -ca-key "{{ nebula_dir }}/ca/ca.key" --ca-crt "{{ nebula_dir }}/ca/ca.crt" -out-key "{{ nebula_dir }}/hosts/{{ node_name }}/host.key" -out-crt "{{ nebula_dir }}/hosts/{{ node_name }}/host.crt" -name "{{ node_name }}" -ip "{{ nebula_ip }}/16" -groups "{{ groups }}"
+      command: nebula-cert sign -ca-key "{{ nebula_control_dir }}/ca/ca.key" --ca-crt "{{ nebula_control_dir }}/ca/ca.crt" -out-key "{{ nebula_control_dir }}/hosts/{{ node_name }}/host.key" -out-crt "{{ nebula_control_dir }}/hosts/{{ node_name }}/host.crt" -name "{{ node_name }}" -ip "{{ nebula_ip }}/16" -groups "{{ groups }}"
 
     - name: Create node config
-      copy: src="{{ nebula_dir }}/defaults/client.yml" dest="{{ nebula_dir }}/hosts/{{ node_name }}/config.yml"
+      copy: src="{{ nebula_control_dir }}/defaults/client.yml" dest="{{ nebula_control_dir }}/hosts/{{ node_name }}/config.yml"
 
     - include_vars: "{{ ip_list }}"
 
@@ -32,7 +31,7 @@
       command: yq -i '
                 with(.static_host_map["{{ item }}"]; . = ["{{ lighthouses[item] }}"] | . style="flow") |
                 .lighthouse.hosts += ["{{ item }}"]
-              ' "{{ nebula_dir }}/hosts/{{ node_name }}/config.yml"
+              ' "{{ nebula_control_dir }}/hosts/{{ node_name }}/config.yml"
       with_items: "{{ lighthouses }}"
 
     - name: Add node IP to used IP list on successful config generation
@@ -41,7 +40,6 @@
 - name: Set up target node
   hosts: target_nodes
   vars:
-    nebula_dir: /home/nebula/nebula
     enable_ufw: "{{ ufw | default(true) }}"
     enable_docker_ufw: "{{ docker_ufw | default(false) }}"
     # dns_resolved: "{{ dns_resolved | default(false) }}"
@@ -61,7 +59,7 @@
 
     - name: Push configs to node
       synchronize: 
-        src: "{{ nebula_dir }}/hosts/{{ node_name }}/"
+        src: "{{ nebula_control_dir }}/hosts/{{ node_name }}/"
         dest: "/etc/nebula/"
         dest_port: "{{ ssh_port }}"
         mode: push
@@ -69,7 +67,7 @@
 
     - name: Push certs to node
       synchronize: 
-        src: "{{ nebula_dir }}/ca/ca.crt"
+        src: "{{ nebula_control_dir }}/ca/ca.crt"
         dest: "/etc/nebula"
         dest_port: "{{ ssh_port }}"
         mode: push
@@ -77,7 +75,7 @@
 
     - name: Push service config to node
       synchronize: 
-        src: "{{ nebula_dir }}/defaults/nebula.service"
+        src: "{{ nebula_control_dir }}/defaults/nebula.service"
         dest: "/etc/systemd/system"
         dest_port: "{{ ssh_port }}"
         mode: push
@@ -109,7 +107,7 @@
 
     - name: Fetch Docker UFW rules
       synchronize: 
-        src: "{{ nebula_dir }}/defaults/docker-ufw.rules"
+        src: "{{ nebula_control_dir }}/defaults/docker-ufw.rules"
         dest: "/tmp"
         dest_port: "{{ ssh_port }}"
         mode: push
@@ -125,7 +123,7 @@
 
     # - name: Fetch existing IP list
     #   synchronize: 
-    #     src: "{{ nebula_dir }}/hosts/ip_list.yml"
+    #     src: "{{ nebula_control_dir }}/hosts/ip_list.yml"
     #     dest: "/tmp/"
     #     dest_port: "{{ ssh_port }}"
     #     mode: push

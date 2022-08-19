@@ -14,6 +14,9 @@ from ansible.module_utils.common.collections import ImmutableDict
 
 from utils.ip import get_new_IP
 
+# global config
+NEBULA_CONTROL_DIR = "/opt/nebula-control"
+
 # function to get parameters and sources for target action
 def get_config(args):
     if args.command == "add-node":
@@ -33,11 +36,12 @@ def get_config(args):
                 "node_name": args.name,
                 "ufw": args.ufw,
                 "docker_ufw": args.docker_ufw,
+                "nebula_control_dir": NEBULA_CONTROL_DIR
             }
         }
 
     else:
-        sys.exit(f"Unknown command: {command}")
+        sys.exit(f"Unknown command: {args.command}")
 
 if __name__ == "__main__":
     # parse arguments
