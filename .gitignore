@@ -1,4 +1,8 @@
+.in
+.out
+.venv/
+
 ca/
 hosts/
-store/
+store/db.sqlite
 **/__pycache__/

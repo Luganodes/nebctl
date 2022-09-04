@@ -1,0 +1,2 @@
+client_ip_range: 10.121.0.0/24
+lighthouse_ip_range: 10.121.1.0/24

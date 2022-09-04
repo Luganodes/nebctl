@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 
-import sys
+import os
 
 from argparse import ArgumentParser
 
@@ -11,59 +11,34 @@ from ansible.inventory.manager import InventoryManager
 from ansible.executor.playbook_executor import PlaybookExecutor
 from ansible.module_utils.common.collections import ImmutableDict
 
-from utils.ip import get_new_IP
+from utils import settings, hosts, ip
 
 # global config
-NEBULA_CONTROL_DIR = "/opt/nebula-control"
+NEBULA_CONTROL_DIR = os.path.dirname(os.path.realpath(__file__))
 
-# function to get parameters and sources for target action
-def get_config(args):
-    if args.command == "add-node":
-        PLAYBOOK_SOURCE = ["./playbooks/add-node.yml"]
-        INVENTORY_SOURCE = ["./store/inventory"]
+# routine to add a client node
+def add_node(args):
+    PLAYBOOK_SOURCE = [f"{NEBULA_CONTROL_DIR}/playbooks/add-node.yml"]
+    ROLLBACK_SOURCE = [f"{NEBULA_CONTROL_DIR}/playbooks/add-node-rollback.yml"]
+    INVENTORY_SOURCE = [f"{NEBULA_CONTROL_DIR}/store/inventory"]
 
-        nebula_ip = get_new_IP()
+    nebula_ip = ip.generate_nebula_IP(settings.get("client_ip_range"))
 
-        return {
-            "playbook": PLAYBOOK_SOURCE,
-            "inventory": INVENTORY_SOURCE,
-            "extra_vars": {
-                "public_ip": args.ip,
-                "nebula_ip": nebula_ip,
-                "ssh_user": args.ssh_user,
-                "ssh_port": args.ssh_port,
-                "node_name": args.name,
-                "ufw": args.ufw,
-                "docker_ufw": args.docker_ufw,
-                "nebula_control_dir": NEBULA_CONTROL_DIR
-            }
-        }
-
-    else:
-        sys.exit(f"Unknown command: {args.command}")
-
-if __name__ == "__main__":
-    # parse arguments
-    parser = ArgumentParser()
-    subparser = parser.add_subparsers(dest="command")
-
-    add_node = subparser.add_parser("add-node")
-    add_node.add_argument("--ip", type=str, help="Public IP address of the client node to be added", required=True)
-    add_node.add_argument("--name", type=str, help="Name of the client node", required=True)
-    add_node.add_argument("--ssh-user", type=str, help="User account to SSH into on the client node", default="root")
-    add_node.add_argument("--ssh-port", type=int, help="Port on which sshd is listening on the client node", default=22)
-    add_node.add_argument("--ufw", type=bool, help="Set up firewall rules on the client node", default=True)
-    add_node.add_argument("--docker-ufw", type=bool, help="Set up firewall rules for Docker containers on the client node", default=False)
-
-    args = parser.parse_args()
-
-    # get config for current action
-    config = get_config(args)
-
-    # default CLI args
-    context.CLIARGS = ImmutableDict(tags={}, listtags=False, listtasks=False, listhosts=False, syntax=False, connection='smart',
-                    module_path=None, forks=100, ssh_common_args=None, ssh_extra_args=None, sftp_extra_args=None, scp_extra_args=None, 
-                    become=None, become_method=None, become_user=None, verbosity=True, check=False, start_at_task=None)
+    config = {
+        "playbook": PLAYBOOK_SOURCE,
+        "rollback": ROLLBACK_SOURCE,
+        "inventory": INVENTORY_SOURCE,
+        "extra_vars": {
+            "public_ip": args.ip,
+            "nebula_ip": nebula_ip,
+            "ssh_user": args.ssh_user,
+            "ssh_port": args.ssh_port,
+            "node_name": args.name,
+            "ufw": args.ufw,
+            "docker_ufw": args.docker_ufw,
+            "nebula_control_dir": NEBULA_CONTROL_DIR,
+        },
+    }
 
     # initialize dataloader
     loader = DataLoader()
@@ -81,7 +56,99 @@ if __name__ == "__main__":
     passwords = {}
 
     # initialize playbook executor
-    pbex = PlaybookExecutor(playbooks=config["playbook"], inventory=inventory, variable_manager=variable_manager, loader=loader, passwords=passwords)
+    pbex = PlaybookExecutor(
+        playbooks=config["playbook"],
+        inventory=inventory,
+        variable_manager=variable_manager,
+        loader=loader,
+        passwords=passwords,
+    )
 
     # run the playbook
     results = pbex.run()
+
+    # rollback changes if error
+    if results != 0:
+        print("Error encountered. Rolling back changes...")
+        rollback_pbex = PlaybookExecutor(
+            playbooks=config["rollback"],
+            inventory=inventory,
+            variable_manager=variable_manager,
+            loader=loader,
+            passwords=passwords,
+        )
+        rollback_pbex.run()
+
+    # add IP to list and print new node details if successful
+    else:
+        hosts.add_host(args.name, args.ip, nebula_ip)
+
+        print("=" * 50)
+        print("Node added successfully!\n")
+        print(f"Name:               {args.name}")
+        print(f"Public IP:          {args.ip}")
+        print(f"Nebula IP:          {nebula_ip}")
+        print(f"UFW Enabled:        {args.ufw}")
+        print(f"Docker UFW Enabled: {args.docker_ufw}")
+        print("=" * 50)
+
+
+if __name__ == "__main__":
+    # parse arguments
+    parser = ArgumentParser()
+    subparser = parser.add_subparsers(dest="command")
+    subparser.required = True
+
+    add_node_args = subparser.add_parser("add-node")
+    add_node_args.add_argument(
+        "--ip", type=str, help="Public IP address of the client node to be added", required=True
+    )
+    add_node_args.add_argument("--name", type=str, help="Name of the client node", required=True)
+    add_node_args.add_argument(
+        "--ssh-user", type=str, help="User account to SSH into on the client node", default="root"
+    )
+    add_node_args.add_argument(
+        "--ssh-port",
+        type=int,
+        help="Port on which sshd is listening on the client node",
+        default=22,
+    )
+    add_node_args.add_argument(
+        "--ufw", type=bool, help="Set up firewall rules on the client node", default=True
+    )
+    add_node_args.add_argument(
+        "--docker-ufw",
+        type=bool,
+        help="Set up firewall rules for Docker containers on the client node",
+        default=False,
+    )
+
+    args = parser.parse_args()
+
+    # default CLI args
+    context.CLIARGS = ImmutableDict(
+        tags={},
+        listtags=False,
+        listtasks=False,
+        listhosts=False,
+        syntax=False,
+        connection="smart",
+        module_path=None,
+        forks=100,
+        ssh_common_args=None,
+        ssh_extra_args=None,
+        sftp_extra_args=None,
+        scp_extra_args=None,
+        become=None,
+        become_method=None,
+        become_user=None,
+        verbosity=True,
+        check=False,
+        start_at_task=None,
+    )
+
+    # fire routine based on input command
+    if args.command == "add-node":
+        add_node(args)
+    else:
+        print(f"Unknown command: {args.command}")
