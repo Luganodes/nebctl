@@ -1,0 +1,54 @@
+pki:
+  ca: /etc/nebula/ca.crt
+  cert: /etc/nebula/host.crt
+  key: /etc/nebula/host.key
+
+static_host_map:
+
+lighthouse:
+  am_lighthouse: true
+  serve_dns: true
+  dns:
+    host: 
+    port: 5353
+  interval: 60
+
+listen:
+  host: 0.0.0.0
+  port: 4242
+
+punchy:
+  punch: true
+  respond: true
+
+relay:
+  am_relay: true
+  use_relays: true
+
+tun:
+  disabled: false
+  dev: nebula1
+  drop_multicast: false
+  tx_queue: 500
+  mtu: 1300
+
+firewall:
+  conntrack:
+    tcp_timeout: 12m
+    udp_timeout: 3m
+    default_timeout: 10m
+
+  outbound:
+    - port: any
+      proto: any
+      host: any
+  inbound:
+    - port: any
+      proto: icmp
+      host: any
+    - port: 5353
+      proto: any
+      host: any
+    - port: any
+      proto: any
+      group: admin

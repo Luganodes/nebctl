@@ -21,12 +21,17 @@ def add_node(args):
 
     # get IP address for new node
     nebula_ip = ip.generate_nebula_IP(
-        settings.get("nebula_network_ip"), settings.get("nebula_network_mask")
+        settings.get("nebula_network_ip"),
+        settings.get("nebula_network_mask"),
+        lighthouse=args.lighthouse,
     )
 
     # generate default node config
     node_config = f"/tmp/{args.name}{int(time.time())}.yml"
-    configs.generate_client_config(node_config)
+    if args.lighthouse:
+        configs.generate_lighthouse_config(args.ip, nebula_ip, args.nebula_port, node_config)
+    else:
+        configs.generate_client_config(args.nebula_port, node_config)
 
     config = {
         "playbook": PLAYBOOK_SOURCE,
@@ -37,6 +42,8 @@ def add_node(args):
             "nebula_ip": nebula_ip,
             "ssh_user": args.ssh_user,
             "ssh_port": args.ssh_port,
+            "nebula_port": args.nebula_port,
+            "lighthouse": args.lighthouse,
             "node_name": args.name,
             "node_config": node_config,
             "ufw": args.ufw,
@@ -86,13 +93,22 @@ def add_node(args):
 
     # add IP to list and print new node details if successful
     else:
-        hosts.add_host(args.name, args.ip, nebula_ip)
+        hosts.add_host(
+            args.name,
+            args.ip,
+            nebula_ip,
+            nebula_port=args.nebula_port,
+            ssh_user=args.ssh_user,
+            ssh_port=args.ssh_port,
+            is_lighthouse=args.lighthouse,
+        )
 
         print("=" * 50)
         print("Node added successfully!\n")
         print(f"Name:               {args.name}")
         print(f"Public IP:          {args.ip}")
         print(f"Nebula IP:          {nebula_ip}")
+        print(f"Lighthouse:         {args.lighthouse}")
         print(f"UFW Enabled:        {args.ufw}")
         print(f"Docker UFW Enabled: {args.docker_ufw}")
         print("=" * 50)

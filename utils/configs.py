@@ -28,15 +28,51 @@ def dump(config, path):
 
 
 # generate client config by populating it with existing lighthouses
-def generate_client_config(destination):
+def generate_client_config(nebula_port, destination):
     with Session(engine) as session:
         config = load(CLIENT_CONFIG_PATH)
         lighthouses_query = select(Host).where(Host.is_lighthouse == True)
         lighthouses = session.scalars(lighthouses_query)
 
+        # set port
+        config["listen"]["port"] = nebula_port
+
+        # initialize static host map
         if not config["static_host_map"]:
             config["static_host_map"] = dict()
 
+        # initialize lighthouse hosts
+        if not config["lighthouse"]["hosts"]:
+            config["lighthouse"]["hosts"] = list()
+
+        # add all lighthouse info to statis host map and hosts
+        for lighthouse in lighthouses:
+            config["static_host_map"][lighthouse.nebula_ip] = [
+                f"{lighthouse.public_ip}:{lighthouse.nebula_port}"
+            ]
+            config["lighthouse"]["hosts"].append(lighthouse.nebula_ip)
+
+        dump(config, destination)
+
+
+# generate lighthouse config by populating it with existing lighthouses
+def generate_lighthouse_config(public_ip, nebula_ip, nebula_port, destination):
+    with Session(engine) as session:
+        config = load(LIGHTHOUSE_CONFIG_PATH)
+        lighthouses_query = select(Host).where(Host.is_lighthouse == True)
+        lighthouses = session.scalars(lighthouses_query)
+
+        # set port
+        config["listen"]["port"] = nebula_port
+
+        # set dns host
+        config["lighthouse"]["dns"]["host"] = nebula_ip
+
+        # initialize static host map
+        if not config["static_host_map"]:
+            config["static_host_map"] = {nebula_ip: [f"{public_ip}:{nebula_port}"]}
+
+        # add all lighthouse info to statis host map and hosts
         for lighthouse in lighthouses:
             config["static_host_map"][lighthouse.nebula_ip] = [
                 f"{lighthouse.public_ip}:{lighthouse.nebula_port}"

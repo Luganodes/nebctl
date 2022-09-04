@@ -37,7 +37,22 @@ if __name__ == "__main__":
         default=22,
     )
     add_node_args.add_argument(
-        "--ufw", type=bool, help="Set up firewall rules on the client node", default=True
+        "--nebula-port",
+        type=int,
+        help="Port on which nebula must listen on the client node",
+        default=4242,
+    )
+    add_node_args.add_argument(
+        "--lighthouse",
+        type=bool,
+        help="Whether or not the node is a lighthouse",
+        default=False,
+    )
+    add_node_args.add_argument(
+        "--ufw",
+        type=bool,
+        help="Set up firewall rules on the client node",
+        default=True,
     )
     add_node_args.add_argument(
         "--docker-ufw",
