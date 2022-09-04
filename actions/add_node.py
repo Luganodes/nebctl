@@ -15,6 +15,10 @@ def add_node(args):
     ROLLBACK_SOURCE = [f"{NEBULA_CONTROL_DIR}/playbooks/add-node-rollback.yml"]
     INVENTORY_SOURCE = [f"{NEBULA_CONTROL_DIR}/store/inventory"]
 
+    # check if host with the given name already exists
+    if hosts.exists(args.name):
+        raise Exception(f"A host named '{args.name}' already exists!")
+
     # get IP address for new node
     nebula_ip = ip.generate_nebula_IP(
         settings.get("nebula_network_ip"), settings.get("nebula_network_mask")

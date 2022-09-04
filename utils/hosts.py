@@ -4,6 +4,14 @@ from sqlalchemy.orm import Session
 from .db import engine
 from .db.models import Host, Group
 
+# check if host with given name exists
+def exists(name):
+    with Session(engine) as session:
+        target_host_query = select(Host).where(Host.name == name)
+        target_host = session.scalars(target_host_query).all()
+        return len(target_host) != 0
+
+
 # add new host to db
 def add_host(
     name,

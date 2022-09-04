@@ -20,11 +20,6 @@
     - name: Sign certificates
       command: nebula-cert sign -ca-key "{{ nebula_control_dir }}/ca/ca.key" --ca-crt "{{ nebula_control_dir }}/ca/ca.crt" -out-key "{{ nebula_control_dir }}/hosts/{{ node_name }}/host.key" -out-crt "{{ nebula_control_dir }}/hosts/{{ node_name }}/host.crt" -name "{{ node_name }}" -ip "{{ nebula_ip }}/16" -groups "{{ groups }}"
 
-    # - name: Create node config
-    #   copy: 
-    #     src: "{{ nebula_control_dir }}/defaults/client.yml" 
-    #     dest: "{{ nebula_control_dir }}/hosts/{{ node_name }}/config.yml"
-
     - name: Generate client config with lighthouse hosts
       copy:
         src: "{{ node_config }}"
@@ -107,7 +102,7 @@
       delegate_to: localhost
       when: enable_docker_ufw | bool
 
-    - name: Configure Docker UFW rules (TODO -- idempotency issues due to cat?)
+    - name: Configure Docker UFW rules (TODO -- investigate potential idempotency issues due to cat)
       shell: "{{ item }}"
       with_items:
         - "cat /tmp/docker-ufw.rules >> /etc/ufw/after.rules"
