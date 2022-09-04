@@ -1,2 +1,2 @@
-client_ip_range: 10.121.0.0/24
-lighthouse_ip_range: 10.121.1.0/24
+nebula_network_ip: 10.121.0.0
+nebula_network_mask: 255.255.0.0

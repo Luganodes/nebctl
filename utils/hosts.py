@@ -1,5 +1,3 @@
-#! /usr/bin/env python3
-
 from sqlalchemy import select, and_
 from sqlalchemy.orm import Session
 

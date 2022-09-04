@@ -2,17 +2,15 @@
 
 - hosts: localhost
   tasks:
-    - name: Add target node to in-memory inventory
+    - name: Add target to in-memory inventory
       add_host:
         name: "{{ public_ip }}"
-        groups: target_nodes
+        groups: target_node
         ansible_user: "{{ ssh_user | default('root') }}"
-        ansible_ssh_port: "{{ ssh_port | default('22') }}"
+        ansible_ssh_port: "{{ ssh_port | default(22) }}"
 
 - name: Add node to admin panel
   hosts: localhost
-  vars:
-    ip_list: "{{ nebula_control_dir }}/store/ip_list.yml"
   tasks:
     - name: Create node directory
       file:
@@ -22,27 +20,22 @@
     - name: Sign certificates
       command: nebula-cert sign -ca-key "{{ nebula_control_dir }}/ca/ca.key" --ca-crt "{{ nebula_control_dir }}/ca/ca.crt" -out-key "{{ nebula_control_dir }}/hosts/{{ node_name }}/host.key" -out-crt "{{ nebula_control_dir }}/hosts/{{ node_name }}/host.crt" -name "{{ node_name }}" -ip "{{ nebula_ip }}/16" -groups "{{ groups }}"
 
-    - name: Create node config
-      copy: src="{{ nebula_control_dir }}/defaults/client.yml" dest="{{ nebula_control_dir }}/hosts/{{ node_name }}/config.yml"
+    # - name: Create node config
+    #   copy: 
+    #     src: "{{ nebula_control_dir }}/defaults/client.yml" 
+    #     dest: "{{ nebula_control_dir }}/hosts/{{ node_name }}/config.yml"
 
-    - include_vars: "{{ ip_list }}"
+    - name: Generate client config with lighthouse hosts
+      copy:
+        src: "{{ node_config }}"
+        dest: "{{ nebula_control_dir }}/hosts/{{ node_name }}/config.yml"
 
-    - name: Edit node config with lighthouse hosts
-      command: yq -i '
-                with(.static_host_map["{{ item }}"]; . = ["{{ lighthouses[item] }}"] | . style="flow") |
-                .lighthouse.hosts += ["{{ item }}"]
-              ' "{{ nebula_control_dir }}/hosts/{{ node_name }}/config.yml"
-      with_items: "{{ lighthouses }}"
-
-    - name: Add node IP to used IP list on successful config generation
-      command: yq -i '.clients["{{ nebula_ip }}"] = "{{ public_ip }}"' "{{ ip_list }}"
 
 - name: Set up target node
-  hosts: target_nodes
+  hosts: target_node
   vars:
     enable_ufw: "{{ ufw | default(true) }}"
     enable_docker_ufw: "{{ docker_ufw | default(false) }}"
-    # dns_resolved: "{{ dns_resolved | default(false) }}"
   tasks:
     - name: Install nebula binaries
       unarchive:
@@ -120,28 +113,3 @@
         - "cat /tmp/docker-ufw.rules >> /etc/ufw/after.rules"
         - "ufw reload"
       when: enable_docker_ufw | bool
-
-    # - name: Fetch existing IP list
-    #   synchronize: 
-    #     src: "{{ nebula_control_dir }}/hosts/ip_list.yml"
-    #     dest: "/tmp/"
-    #     dest_port: "{{ ssh_port }}"
-    #     mode: push
-    #   delegate_to: localhost
-    #   when: dns_resolved | bool
-
-    # - include_vars: "/tmp/ip_list.yml"
-    # - name: Update DNS
-    #   shell: sed -i -E "s/^.{0,1}(DNS=.*)/\1 {{ item }}:5353/" /etc/systemd/resolved.conf
-    #   with_items: "{{ lighthouses }}"
-    #   when: dns_resolved | bool
-
-    # - name: Update domains
-    #   shell: sed -i -E 's/^.{0,1}(Domains=.*)/\1 ~lgns/' /etc/systemd/resolved.conf
-    #   when: dns_resolved | bool
-
-    # - name: Reload DNS config
-    #   systemd:
-    #     name: systemd-resolved
-    #     state: started
-    #   when: dns_resolved | bool

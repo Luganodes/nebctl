@@ -1,6 +1,7 @@
 #! /usr/bin/env python3
 
 import os
+import time
 
 from argparse import ArgumentParser
 
@@ -11,7 +12,7 @@ from ansible.inventory.manager import InventoryManager
 from ansible.executor.playbook_executor import PlaybookExecutor
 from ansible.module_utils.common.collections import ImmutableDict
 
-from utils import settings, hosts, ip
+from utils import settings, hosts, ip, configs
 
 # global config
 NEBULA_CONTROL_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -22,7 +23,14 @@ def add_node(args):
     ROLLBACK_SOURCE = [f"{NEBULA_CONTROL_DIR}/playbooks/add-node-rollback.yml"]
     INVENTORY_SOURCE = [f"{NEBULA_CONTROL_DIR}/store/inventory"]
 
-    nebula_ip = ip.generate_nebula_IP(settings.get("client_ip_range"))
+    # get IP address for new node
+    nebula_ip = ip.generate_nebula_IP(
+        settings.get("nebula_network_ip"), settings.get("nebula_network_mask")
+    )
+
+    # generate default node config
+    node_config = f"/tmp/{args.name}{int(time.time())}.yml"
+    configs.generate_client_config(node_config)
 
     config = {
         "playbook": PLAYBOOK_SOURCE,
@@ -34,6 +42,7 @@ def add_node(args):
             "ssh_user": args.ssh_user,
             "ssh_port": args.ssh_port,
             "node_name": args.name,
+            "node_config": node_config,
             "ufw": args.ufw,
             "docker_ufw": args.docker_ufw,
             "nebula_control_dir": NEBULA_CONTROL_DIR,
