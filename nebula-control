@@ -5,6 +5,7 @@ import os
 from argparse import ArgumentParser
 
 from ansible import context
+from ansible.utils.display import initialize_locale
 from ansible.module_utils.common.collections import ImmutableDict
 
 # import all actions
@@ -68,6 +69,9 @@ if __name__ == "__main__":
     # }}}
 
     args = parser.parse_args()
+
+    # initialize ansible locale
+    initialize_locale()
 
     # default CLI args
     context.CLIARGS = ImmutableDict(

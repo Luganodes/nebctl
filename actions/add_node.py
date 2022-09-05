@@ -79,6 +79,9 @@ def add_node(args):
     # run the playbook
     results = pbex.run()
 
+    # get terminal dimensions for status display
+    terminal_size = os.get_terminal_size()
+
     # rollback changes if error
     if results != 0:
         print("Error encountered. Rolling back changes...")
@@ -90,6 +93,10 @@ def add_node(args):
             passwords=passwords,
         )
         rollback_pbex.run()
+
+        print("=" * terminal_size.columns)
+        print("Failed to add node!")
+        print("=" * terminal_size.columns)
 
     # add IP to list and print new node details if successful
     else:
@@ -103,7 +110,7 @@ def add_node(args):
             is_lighthouse=args.lighthouse,
         )
 
-        print("=" * 50)
+        print("=" * terminal_size.columns)
         print("Node added successfully!\n")
         print(f"Name:               {args.name}")
         print(f"Public IP:          {args.ip}")
@@ -111,4 +118,4 @@ def add_node(args):
         print(f"Lighthouse:         {args.lighthouse}")
         print(f"UFW Enabled:        {args.ufw}")
         print(f"Docker UFW Enabled: {args.docker_ufw}")
-        print("=" * 50)
+        print("=" * terminal_size.columns)

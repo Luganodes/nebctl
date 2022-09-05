@@ -60,6 +60,9 @@ def remove_node(args):
     # remove host from database
     hosts.delete_host(target_host.id)
 
-    print("=" * 50)
+    # get terminal dimensions for status display
+    terminal_size = os.get_terminal_size()
+
+    print("=" * terminal_size.columns)
     print("Node removed successfully!")
-    print("=" * 50)
+    print("=" * terminal_size.columns)
