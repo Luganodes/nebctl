@@ -12,11 +12,11 @@ from utils import settings, hosts, ip, configs
 def add_node(args):
     NEBULA_CONTROL_DIR = os.environ.get("NEBULA_CONTROL_DIR")
     PLAYBOOK_SOURCE = [f"{NEBULA_CONTROL_DIR}/playbooks/add-node.yml"]
-    ROLLBACK_SOURCE = [f"{NEBULA_CONTROL_DIR}/playbooks/add-node-rollback.yml"]
+    ROLLBACK_SOURCE = [f"{NEBULA_CONTROL_DIR}/playbooks/remove-node.yml"]
     INVENTORY_SOURCE = [f"{NEBULA_CONTROL_DIR}/store/inventory"]
 
     # check if host with the given name already exists
-    if hosts.exists(args.name):
+    if hosts.get(args.name):
         raise Exception(f"A host named '{args.name}' already exists!")
 
     # get IP address for new node

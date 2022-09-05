@@ -16,7 +16,7 @@ from .db.models import Host
 def generate_nebula_IP(net_ip="0.0.0.0", net_mask="255.255.0.0", lighthouse=False):
     with Session(engine) as session:
         used_IPs_query = select(Host.nebula_ip)
-        used_IPs = set(map(lambda ip: int(ip_address(ip)), session.scalars(used_IPs_query)))
+        used_IPs = set(map(lambda ip: int(ip_address(ip)), session.scalars(used_IPs_query).all()))
         possible_IPs = set(map(int, ip_network(f"{net_ip}/{net_mask}").hosts()))
         available_IPs = np.array(sorted(possible_IPs - used_IPs), dtype=int)
 

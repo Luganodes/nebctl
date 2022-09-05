@@ -32,7 +32,7 @@ def generate_client_config(nebula_port, destination):
     with Session(engine) as session:
         config = load(CLIENT_CONFIG_PATH)
         lighthouses_query = select(Host).where(Host.is_lighthouse == True)
-        lighthouses = session.scalars(lighthouses_query)
+        lighthouses = session.scalars(lighthouses_query).all()
 
         # set port
         config["listen"]["port"] = nebula_port
@@ -60,7 +60,7 @@ def generate_lighthouse_config(public_ip, nebula_ip, nebula_port, destination):
     with Session(engine) as session:
         config = load(LIGHTHOUSE_CONFIG_PATH)
         lighthouses_query = select(Host).where(Host.is_lighthouse == True)
-        lighthouses = session.scalars(lighthouses_query)
+        lighthouses = session.scalars(lighthouses_query).all()
 
         # set port
         config["listen"]["port"] = nebula_port

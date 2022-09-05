@@ -1,15 +1,15 @@
-from sqlalchemy import select, and_
+from sqlalchemy import select, delete, and_
 from sqlalchemy.orm import Session
 
 from .db import engine
 from .db.models import Host, Group
 
-# check if host with given name exists
-def exists(name):
+# get host by name
+def get(name):
     with Session(engine) as session:
         target_host_query = select(Host).where(Host.name == name)
-        target_host = session.scalars(target_host_query).all()
-        return len(target_host) != 0
+        target_host = session.scalars(target_host_query).one_or_none()
+        return target_host
 
 
 # add new host to db
@@ -91,8 +91,8 @@ def edit_host(
 def delete_host(id):
     with Session(engine) as session:
         try:
-            target_host = select(Host).where(Host.id == id)
-            session.delete(target_host)
+            target_host_query = delete(Host).where(Host.id == id)
+            session.execute(target_host_query)
             session.commit()
         except:
             session.rollback()
