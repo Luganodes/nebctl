@@ -7,7 +7,7 @@ from ansible.executor.playbook_executor import PlaybookExecutor
 
 from utils import hosts
 
-# routine to add a client node
+# method to remove a node
 def remove_node(args):
     NEBULA_CONTROL_DIR = os.environ.get("NEBULA_CONTROL_DIR")
     PLAYBOOK_SOURCE = [f"{NEBULA_CONTROL_DIR}/playbooks/remove-node.yml"]

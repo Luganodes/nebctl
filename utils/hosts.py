@@ -12,6 +12,14 @@ def get(name):
         return target_host
 
 
+# get all hosts
+def get_all():
+    with Session(engine) as session:
+        target_hosts_query = select(Host)
+        target_hosts = session.scalars(target_hosts_query).all()
+        return target_hosts
+
+
 # add new host to db
 def add_host(
     name,

@@ -9,7 +9,7 @@ from ansible.utils.display import initialize_locale
 from ansible.module_utils.common.collections import ImmutableDict
 
 # import all actions
-from actions import add_node, remove_node
+from actions import add_node, remove_node, list_nodes
 
 
 # global config
@@ -68,6 +68,10 @@ if __name__ == "__main__":
     remove_node_args.add_argument("--name", type=str, help="Name of the client node", required=True)
     # }}}
 
+    # `list-nodes` arguments {{{
+    list_nodes_args = subparser.add_parser("list-nodes")
+    # }}}
+
     args = parser.parse_args()
 
     # initialize ansible locale
@@ -100,5 +104,7 @@ if __name__ == "__main__":
         add_node(args)
     elif args.command == "remove-node":
         remove_node(args)
+    elif args.command == "list-nodes":
+        list_nodes(args)
     else:
         print(f"Unknown command: {args.command}")
