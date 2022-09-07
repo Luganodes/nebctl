@@ -1,0 +1,26 @@
+---
+
+- hosts: localhost
+  tasks:
+    - name: Add target to in-memory inventory
+      add_host:
+        name: "{{ public_ip }}"
+        groups: target_node
+        ansible_user: "{{ ssh_user | default('root') }}"
+        ansible_ssh_port: "{{ ssh_port | default(22) }}"
+
+- name: Sync configs and restart nebula service on the target node
+  hosts: target_node
+  tasks:
+    - name: Push configs to node
+      synchronize: 
+        src: "{{ nebula_control_dir }}/hosts/{{ node_name }}/"
+        dest: "/etc/nebula/"
+        dest_port: "{{ ssh_port }}"
+        mode: push
+      delegate_to: localhost
+
+    - name: Restart service
+      systemd:
+        name: nebula
+        state: restarted
