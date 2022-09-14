@@ -2,7 +2,7 @@ from sqlalchemy import select, delete, and_
 from sqlalchemy.orm import Session
 
 from .db import engine
-from .db.models import Host, Group
+from .db.models import Host, HostGroup
 
 # get host by name
 def get(name):
@@ -20,6 +20,14 @@ def get_all():
         return target_hosts
 
 
+# get all groups of host
+def get_groups(host_id):
+    with Session(engine) as session:
+        target_groups_query = select(HostGroup).where(HostGroup.host_id == host_id)
+        target_groups = session.scalars(target_groups_query).all()
+        return target_groups
+
+
 # add new host to db
 def add_host(
     name,
@@ -33,30 +41,30 @@ def add_host(
 ):
 
     with Session(engine) as session:
-        try:
-            # create host
-            new_host = Host(
-                name=name,
-                public_ip=public_ip,
-                nebula_ip=nebula_ip,
-                nebula_port=nebula_port,
-                ssh_user=ssh_user,
-                ssh_port=ssh_port,
-                is_lighthouse=is_lighthouse,
-            )
-            session.add(new_host)
-            session.commit()
+        # try:
+        # create host
+        new_host = Host(
+            name=name,
+            public_ip=public_ip,
+            nebula_ip=nebula_ip,
+            nebula_port=nebula_port,
+            ssh_user=ssh_user,
+            ssh_port=ssh_port,
+            is_lighthouse=is_lighthouse,
+        )
+        session.add(new_host)
+        session.commit()
 
-            # add groups to host
-            for group in groups:
-                new_group = Group(
-                    host_id=new_host.id,
-                    group_name=group,
-                )
-                session.add(new_group)
-            session.commit()
-        except:
-            session.rollback()
+        # add groups to host
+        for group in groups:
+            new_group = HostGroup(
+                host_id=new_host.id,
+                name=group,
+            )
+            session.add(new_group)
+        session.commit()
+        # except:
+        #     session.rollback()
 
 
 # edit details of the given host
@@ -110,9 +118,9 @@ def delete_host(id):
 def add_group(host_id, group_name):
     with Session(engine) as session:
         try:
-            new_group = Group(
+            new_group = HostGroup(
                 host_id=host_id,
-                group_name=group_name,
+                name=group_name,
             )
             session.add(new_group)
             session.commit()
@@ -124,8 +132,8 @@ def add_group(host_id, group_name):
 def remove_group(host_id, group_name):
     with Session(engine) as session:
         try:
-            target_group = select(Group).where(
-                and_(Group.host_id == host_id, Group.group_name == group_name)
+            target_group = select(HostGroup).where(
+                and_(HostGroup.host_id == host_id, HostGroup.name == group_name)
             )
             session.delete(target_group)
             session.commit()

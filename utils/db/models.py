@@ -16,13 +16,13 @@ class Host(Base):
     ssh_user = Column(String(256), nullable=False, default="root")
     ssh_port = Column(Integer, nullable=False, default=22)
     is_lighthouse = Column(Boolean, default=False)
-    groups = relationship("Group", cascade="all, delete")
+    groups = relationship("HostGroup", cascade="all, delete", passive_deletes=True)
 
 
-# groups relation model
-class Group(Base):
-    __tablename__ = "group"
+# host groups relation model
+class HostGroup(Base):
+    __tablename__ = "hostgroup"
 
     id = Column(Integer, primary_key=True)
-    host_id = Column(Integer, ForeignKey("host.id"))
-    group_name = Column(String(256))
+    host_id = Column(Integer, ForeignKey("host.id", ondelete="CASCADE"))
+    name = Column(String(256))

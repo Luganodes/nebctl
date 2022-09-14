@@ -61,6 +61,11 @@ if __name__ == "__main__":
         help="Set up firewall rules for Docker containers on the client node",
         default=False,
     )
+    add_node_args.add_argument(
+        "--groups",
+        nargs="+",
+        help="Add host to group",
+    )
     # }}}
 
     # `remove-node` arguments {{{

@@ -9,9 +9,15 @@ def list_nodes(args):
 
     # tabulate host details
     table = [
-        [host.name, host.nebula_ip, host.public_ip, "yes" if host.is_lighthouse else "no"]
+        [
+            host.name,
+            host.nebula_ip,
+            host.public_ip,
+            "yes" if host.is_lighthouse else "no",
+            ", ".join([group.name for group in hosts.get_groups(host.id)]),
+        ]
         for host in all_hosts
     ]
-    headers = ["Name", "Nebula IP", "Public IP", "Lighthouse"]
+    headers = ["Name", "Nebula IP", "Public IP", "Lighthouse", "Groups"]
 
     print(tabulate(table, headers, tablefmt="psql"))

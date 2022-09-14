@@ -48,6 +48,7 @@ def add_node(args):
             "node_config": node_config,
             "ufw": args.ufw,
             "docker_ufw": args.docker_ufw,
+            "groups": ",".join(args.groups),
             "nebula_control_dir": NEBULA_CONTROL_DIR,
         },
     }
@@ -108,6 +109,7 @@ def add_node(args):
             ssh_user=args.ssh_user,
             ssh_port=args.ssh_port,
             is_lighthouse=args.lighthouse,
+            groups=args.groups,
         )
 
         print("=" * terminal_size.columns)
