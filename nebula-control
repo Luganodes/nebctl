@@ -9,7 +9,7 @@ from ansible.utils.display import initialize_locale
 from ansible.module_utils.common.collections import ImmutableDict
 
 # import all actions
-from actions import add_node, remove_node, list_nodes, push_config
+from actions import add_node, remove_node, generate_node, list_nodes, push_config, edit_config
 
 
 # global config
@@ -65,12 +65,26 @@ if __name__ == "__main__":
         "--groups",
         nargs="+",
         help="Add host to group",
+        default=[],
     )
     # }}}
 
     # `remove-node` arguments {{{
     remove_node_args = subparser.add_parser("remove-node")
     remove_node_args.add_argument("--name", type=str, help="Name of the client node", required=True)
+    # }}}
+
+    # `generate-node` arguments {{{
+    generate_node_args = subparser.add_parser("generate-node")
+    generate_node_args.add_argument(
+        "--name", type=str, help="Name of the client node", required=True
+    )
+    generate_node_args.add_argument(
+        "--groups",
+        nargs="+",
+        help="Add host to group",
+        default=[],
+    )
     # }}}
 
     # `list-nodes` arguments {{{
@@ -80,6 +94,12 @@ if __name__ == "__main__":
     # `push-config` arguments {{{
     push_config_args = subparser.add_parser("push-config")
     push_config_args.add_argument("--name", type=str, help="Name of the client node", required=True)
+    # }}}
+
+    # `edit-config` arguments {{{
+    edit_config_args = subparser.add_parser("edit-config")
+    edit_config_args.add_argument("--name", type=str, help="Name of the client node", required=True)
+    edit_config_args.add_argument("--key", type=str, help="Key to edit")
     # }}}
 
     args = parser.parse_args()
@@ -114,9 +134,13 @@ if __name__ == "__main__":
         add_node(args)
     elif args.command == "remove-node":
         remove_node(args)
+    elif args.command == "generate-node":
+        generate_node(args)
     elif args.command == "list-nodes":
         list_nodes(args)
     elif args.command == "push-config":
         push_config(args)
+    elif args.command == "edit-config":
+        edit_config(args)
     else:
         print(f"Unknown command: {args.command}")

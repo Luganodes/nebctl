@@ -10,7 +10,7 @@ class Host(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(256), nullable=False)
-    public_ip = Column(String(20), nullable=False)
+    public_ip = Column(String(20), nullable=True)
     nebula_ip = Column(String(20), nullable=False)
     nebula_port = Column(Integer, nullable=False, default=4242)
     ssh_user = Column(String(256), nullable=False, default="root")
