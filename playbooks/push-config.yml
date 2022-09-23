@@ -8,7 +8,7 @@
         groups: target_node
         ansible_user: "{{ ssh_user | default('root') }}"
         ansible_ssh_port: "{{ ssh_port | default(22) }}"
-      when: "{{ public_ip | bool }}"
+      when: public_ip
 
 - name: Update node configuration zip if not remotely controllable
   hosts: localhost
