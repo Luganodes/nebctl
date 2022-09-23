@@ -33,16 +33,10 @@ def edit_config(args):
             break
 
     # spawn editor for making changes to config
-    edited = click.edit(
+    click.edit(
         filename=CONFIG_SOURCE,
         editor=f"$EDITOR +{LINE_NUMBER}",
-        require_save=True,
     )
-
-    # terminate if file unchanged
-    if not edited:
-        print("No changes made to config.")
-        return
 
     config = {
         "playbook": PLAYBOOK_SOURCE,

@@ -8,8 +8,22 @@
         groups: target_node
         ansible_user: "{{ ssh_user | default('root') }}"
         ansible_ssh_port: "{{ ssh_port | default(22) }}"
+      when: "{{ public_ip | bool }}"
 
-- name: Sync configs and restart nebula service on the target node
+- name: Update node configuration zip if not remotely controllable
+  hosts: localhost
+  tasks:
+    - name: Update config zip
+      archive:
+        path: 
+          - "{{ nebula_control_dir }}/hosts/{{ node_name }}/config.yml"
+          - "{{ nebula_control_dir }}/hosts/{{ node_name }}/host.crt"
+          - "{{ nebula_control_dir }}/hosts/{{ node_name }}/host.key"
+        dest: "{{ nebula_control_dir }}/hosts/{{ node_name }}/config.zip"
+        format: zip
+      when: not public_ip
+
+- name: Sync configs and restart nebula service on the target node if remotely managed
   hosts: target_node
   tasks:
     - name: Push configs to node
@@ -24,3 +38,4 @@
       systemd:
         name: nebula
         state: restarted
+
