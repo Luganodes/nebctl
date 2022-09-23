@@ -45,7 +45,7 @@ def generate_client_config(nebula_port, destination):
         if not config["lighthouse"]["hosts"]:
             config["lighthouse"]["hosts"] = list()
 
-        # add all lighthouse info to statis host map and hosts
+        # add all lighthouse info to static host map and hosts
         for lighthouse in lighthouses:
             config["static_host_map"][lighthouse.nebula_ip] = [
                 f"{lighthouse.public_ip}:{lighthouse.nebula_port}"
