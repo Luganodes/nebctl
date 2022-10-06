@@ -14,9 +14,12 @@ def generate_node(args):
     PLAYBOOK_SOURCE = [f"{NEBULA_CONTROL_DIR}/playbooks/generate-node.yml"]
     INVENTORY_SOURCE = [f"{NEBULA_CONTROL_DIR}/store/inventory"]
 
+    # append domain to input name
+    node_name = args.name + "." + settings.get("domain")
+
     # check if host with the given name already exists
-    if hosts.get(args.name):
-        raise Exception(f"A host named '{args.name}' already exists!")
+    if hosts.get(node_name):
+        raise Exception(f"A host named '{node_name}' already exists!")
 
     # get IP address for new node
     nebula_ip = ip.generate_nebula_IP(
@@ -25,7 +28,7 @@ def generate_node(args):
     )
 
     # generate default node config assuming default nebula listener port (4242)
-    node_config = f"/tmp/{args.name}{int(time.time())}.yml"
+    node_config = f"/tmp/{node_name}{int(time.time())}.yml"
     configs.generate_client_config(4242, node_config)
 
     config = {
@@ -33,7 +36,7 @@ def generate_node(args):
         "inventory": INVENTORY_SOURCE,
         "extra_vars": {
             "nebula_ip": nebula_ip,
-            "node_name": args.name,
+            "node_name": node_name,
             "node_config": node_config,
             "groups": ",".join(args.groups),
             "nebula_control_dir": NEBULA_CONTROL_DIR,
@@ -73,7 +76,7 @@ def generate_node(args):
     # add IP to list and print new node details if successful
     if results == 0:
         hosts.add_host(
-            args.name,
+            node_name,
             None,
             nebula_ip,
             groups=args.groups,
@@ -81,9 +84,9 @@ def generate_node(args):
 
         print("=" * terminal_size.columns)
         print("Node generated successfully!\n")
-        print(f"Name:               {args.name}")
+        print(f"Name:               {node_name}")
         print(f"Nebula IP:          {nebula_ip}\n")
         print(
-            f"Distributable config zip stored at: {NEBULA_CONTROL_DIR}/hosts/{args.name}/config.zip"
+            f"Distributable config zip stored at: {NEBULA_CONTROL_DIR}/hosts/{node_name}/config.zip"
         )
         print("=" * terminal_size.columns)

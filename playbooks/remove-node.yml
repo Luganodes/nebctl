@@ -35,6 +35,22 @@
         state: absent
       ignore_errors: yes
 
+    - name: Delete network config
+      file:
+        path: /etc/systemd/network/nebula1.network
+        state: absent
+      ignore_errors: yes
+
+    - name: Restart systemd-resolved
+      systemd:
+        name: systemd-resolved
+        state: restarted
+
+    - name: Restart systemd-networkd
+      systemd:
+        name: systemd-networkd
+        state: restarted
+
     - name: Delete Nebula binaries
       file:
         path: "/usr/bin/{{ item }}"

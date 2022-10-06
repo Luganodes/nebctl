@@ -18,6 +18,6 @@ def list_nodes(args):
         ]
         for host in all_hosts
     ]
-    headers = ["Name", "Nebula IP", "Public IP", "Lighthouse", "Groups"]
+    headers = ["Host", "Nebula IP", "Public IP", "Lighthouse", "Groups"]
 
     print(tabulate(table, headers, tablefmt="psql"))

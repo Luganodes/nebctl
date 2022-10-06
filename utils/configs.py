@@ -1,4 +1,5 @@
 import yaml
+import configparser
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -6,8 +7,11 @@ from sqlalchemy.orm import Session
 from .db import engine
 from .db.models import Host
 
+from . import settings
+
 CLIENT_CONFIG_PATH = "defaults/client.yml"
 LIGHTHOUSE_CONFIG_PATH = "defaults/lighthouse.yml"
+NETWORK_CONFIG_PATH = "defaults/nebula1.network"
 
 # load config yml
 def load(path):
@@ -79,3 +83,33 @@ def generate_lighthouse_config(public_ip, nebula_ip, nebula_port, destination):
             ]
 
         dump(config, destination)
+
+
+# generate network config
+def generate_network_config(destination, node_config):
+    with Session(engine) as session:
+        network_config = configparser.ConfigParser()
+        network_config.optionxform = str
+        network_config.read(NETWORK_CONFIG_PATH)
+
+        lighthouses_query = select(Host).where(Host.is_lighthouse == True)
+        lighthouses = session.scalars(lighthouses_query).all()
+
+        # check if current node is a lighthouse and is serving dns; if yes add to resolvers
+        node = load(node_config)["lighthouse"]
+        if node["am_lighthouse"]:
+            if node["serve_dns"]:
+                network_config["Network"]["DNS"] += f"{node['dns']['host']}:{node['dns']['port']} "
+
+        # for each lighhouse in db, check if it is serving dns; if yes add to resolvers
+        for lighthouse in lighthouses:
+            lighthouse_config = load(f"hosts/{lighthouse.name}/config.yml")["lighthouse"]
+            if lighthouse_config["serve_dns"]:
+                network_config["Network"][
+                    "DNS"
+                ] += f"{lighthouse_config['dns']['host']}:{lighthouse_config['dns']['port']} "
+
+        network_config["Network"]["Domains"] = settings.get("domain")
+
+        with open(destination, "w") as cf:
+            network_config.write(cf)

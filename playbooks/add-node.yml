@@ -45,7 +45,7 @@
         state: directory
         mode: 0755
 
-    - name: Push configs to node
+    - name: Push nebula configs to node
       synchronize: 
         src: "{{ nebula_control_dir }}/hosts/{{ node_name }}/"
         dest: "/etc/nebula/"
@@ -68,6 +68,24 @@
         dest_port: "{{ ssh_port }}"
         mode: push
       delegate_to: localhost
+
+    - name: Push network config to node
+      synchronize: 
+        src: "{{ network_config }}"
+        dest: "/etc/systemd/network/nebula1.network"
+        dest_port: "{{ ssh_port }}"
+        mode: push
+      delegate_to: localhost
+
+    - name: Restart systemd-resolved
+      systemd:
+        name: systemd-resolved
+        state: restarted
+
+    - name: Restart systemd-networkd
+      systemd:
+        name: systemd-networkd
+        state: restarted
 
     - name: Enable and start nebula service
       systemd:

@@ -5,7 +5,7 @@ from ansible.parsing.dataloader import DataLoader
 from ansible.inventory.manager import InventoryManager
 from ansible.executor.playbook_executor import PlaybookExecutor
 
-from utils import hosts
+from utils import hosts, settings
 
 # method to push updated config files to the node
 def push_config(args):
@@ -13,10 +13,13 @@ def push_config(args):
     PLAYBOOK_SOURCE = [f"{NEBULA_CONTROL_DIR}/playbooks/push-config.yml"]
     INVENTORY_SOURCE = [f"{NEBULA_CONTROL_DIR}/store/inventory"]
 
+    # append domain to input name
+    node_name = args.name + "." + settings.get("domain")
+
     # check if host with the given name exists
-    target_host = hosts.get(args.name)
+    target_host = hosts.get(node_name)
     if not target_host:
-        raise Exception(f"A host named '{args.name}' does not exist!")
+        raise Exception(f"A host named '{node_name}' does not exist!")
 
     config = {
         "playbook": PLAYBOOK_SOURCE,
@@ -25,7 +28,7 @@ def push_config(args):
             "public_ip": target_host.public_ip,
             "ssh_user": target_host.ssh_user,
             "ssh_port": target_host.ssh_port,
-            "node_name": args.name,
+            "node_name": node_name,
             "nebula_control_dir": NEBULA_CONTROL_DIR,
         },
     }
