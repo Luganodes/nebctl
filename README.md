@@ -1,5 +1,3 @@
-
-<a id="readme-top"></a>
 <div align="center">
   <a href="">
     <img src="docs/nebulactl.jpeg" alt="nebulactl" >
@@ -43,8 +41,6 @@ Nebula incorporates a number of existing concepts like encryption, security grou
 
 TODO
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 ## Getting Started
 
@@ -67,8 +63,6 @@ $ sh -c "$(curl -sSfl https://gitlab.com/lgns-platform-team/nebula-control/-/raw
 ```sh
 $ cd /opt/nebula-control/ca; nebula-cert ca -name "<name>" -duration 43834h
 ```
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 ## Usage
@@ -136,8 +130,6 @@ $ nebulactl sync [-h] name
 ```
 - `name`: Name of the client node on this network
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 ## Roadmap
 - [x] Remote node management
@@ -148,13 +140,7 @@ $ nebulactl sync [-h] name
 
 See [open issues](#) for a full list of proposed features (and known issues).
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 ## License
 
 Distributed under the MIT License. See `LICENSE.txt` for more information.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
