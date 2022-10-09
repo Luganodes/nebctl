@@ -2,6 +2,11 @@
 
 import os
 
+# global config
+NEBULA_CONTROL_DIR = os.path.dirname(os.path.realpath(__file__))
+os.environ["NEBULA_CONTROL_DIR"] = NEBULA_CONTROL_DIR
+
+# import dependencies
 from argparse import ArgumentParser
 
 from ansible import context
@@ -11,10 +16,6 @@ from ansible.module_utils.common.collections import ImmutableDict
 # import all actions
 from actions import add_node, remove_node, generate_node, list_nodes, push_config, edit_config
 
-
-# global config
-NEBULA_CONTROL_DIR = os.path.dirname(os.path.realpath(__file__))
-os.environ["NEBULA_CONTROL_DIR"] = NEBULA_CONTROL_DIR
 
 if __name__ == "__main__":
     # parse arguments
