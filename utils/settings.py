@@ -1,6 +1,8 @@
+import os
 import yaml
 
-SETTINGS_YML_PATH = "store/settings.yml"
+NEBULA_CONTROL_DIR = os.environ.get("NEBULA_CONTROL_DIR")
+SETTINGS_YML_PATH = f"{NEBULA_CONTROL_DIR}/store/settings.yml"
 
 
 # load settings yml

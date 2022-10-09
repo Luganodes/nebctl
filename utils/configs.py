@@ -1,3 +1,4 @@
+import os
 import yaml
 import configparser
 
@@ -9,9 +10,10 @@ from .db.models import Host
 
 from . import settings
 
-CLIENT_CONFIG_PATH = "defaults/client.yml"
-LIGHTHOUSE_CONFIG_PATH = "defaults/lighthouse.yml"
-NETWORK_CONFIG_PATH = "defaults/nebula1.network"
+NEBULA_CONTROL_DIR = os.environ.get("NEBULA_CONTROL_DIR")
+CLIENT_CONFIG_PATH = f"{NEBULA_CONTROL_DIR}/defaults/client.yml"
+LIGHTHOUSE_CONFIG_PATH = f"{NEBULA_CONTROL_DIR}/defaults/lighthouse.yml"
+NETWORK_CONFIG_PATH = f"{NEBULA_CONTROL_DIR}/defaults/nebula1.network"
 
 # load config yml
 def load(path):
@@ -103,7 +105,9 @@ def generate_network_config(destination, node_config):
 
         # for each lighhouse in db, check if it is serving dns; if yes add to resolvers
         for lighthouse in lighthouses:
-            lighthouse_config = load(f"hosts/{lighthouse.name}/config.yml")["lighthouse"]
+            lighthouse_config = load(f"{NEBULA_CONTROL_DIR}/hosts/{lighthouse.name}/config.yml")[
+                "lighthouse"
+            ]
             if lighthouse_config["serve_dns"]:
                 network_config["Network"][
                     "DNS"
