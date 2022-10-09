@@ -1,5 +1,4 @@
 
-
 <a id="readme-top"></a>
 <div align="center">
   <a href="">
@@ -92,9 +91,9 @@ $ nebulactl COMMAND [-h] [--options]
 ####  `add`
 ```sh
 $ nebulactl add [-h] --ip IP [--ssh-user SSH_USER] [--ssh-port SSH_PORT] 
-				[--nebula-port NEBULA_PORT] [--lighthouse LIGHTHOUSE]
-	            [--ufw UFW] [--docker-ufw DOCKER_UFW] 
-	            [--groups GROUPS [GROUPS ...]]
+                [--nebula-port NEBULA_PORT] [--lighthouse LIGHTHOUSE]
+	              [--ufw UFW] [--docker-ufw DOCKER_UFW] 
+	              [--groups GROUPS [GROUPS ...]]
                 name
 ```
 - `name`: Name of the client node on this network
