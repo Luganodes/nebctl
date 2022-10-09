@@ -25,10 +25,10 @@ if __name__ == "__main__":
 
     # `add` arguments {{{
     add_args = subparser.add_parser("add")
+    add_args.add_argument("name", type=str, help="Name of the client node")
     add_args.add_argument(
         "--ip", type=str, help="Public IP address of the client node to be added", required=True
     )
-    add_args.add_argument("--name", type=str, help="Name of the client node", required=True)
     add_args.add_argument(
         "--ssh-user", type=str, help="User account to SSH into on the client node", default="root"
     )
@@ -72,12 +72,12 @@ if __name__ == "__main__":
 
     # `remove` arguments {{{
     remove_args = subparser.add_parser("remove")
-    remove_args.add_argument("--name", type=str, help="Name of the client node", required=True)
+    remove_args.add_argument("name", type=str, help="Name of the client node")
     # }}}
 
     # `generate` arguments {{{
     generate_args = subparser.add_parser("generate")
-    generate_args.add_argument("--name", type=str, help="Name of the client node", required=True)
+    generate_args.add_argument("name", type=str, help="Name of the client node")
     generate_args.add_argument(
         "--groups",
         nargs="+",
@@ -92,12 +92,12 @@ if __name__ == "__main__":
 
     # `sync` arguments {{{
     sync_args = subparser.add_parser("sync")
-    sync_args.add_argument("--name", type=str, help="Name of the client node", required=True)
+    sync_args.add_argument("name", type=str, help="Name of the client node")
     # }}}
 
     # `edit` arguments {{{
     edit_args = subparser.add_parser("edit")
-    edit_args.add_argument("--name", type=str, help="Name of the client node", required=True)
+    edit_args.add_argument("name", type=str, help="Name of the client node")
     edit_args.add_argument("--key", type=str, help="Key to edit")
     # }}}
 
