@@ -35,6 +35,10 @@ def edit_config(args):
             LINE_NUMBER = contents[:start].count("\n") + 1
             break
 
+    # if $EDITOR is not set, set it to vim
+    if "EDITOR" not in os.environ:
+        os.environ["EDITOR"] = "/usr/bin/vim"
+
     # spawn editor for making changes to config
     click.edit(
         filename=CONFIG_SOURCE,
