@@ -23,46 +23,46 @@ if __name__ == "__main__":
     subparser = parser.add_subparsers(dest="command")
     subparser.required = True
 
-    # `add-node` arguments {{{
-    add_node_args = subparser.add_parser("add-node")
-    add_node_args.add_argument(
+    # `add` arguments {{{
+    add_args = subparser.add_parser("add")
+    add_args.add_argument(
         "--ip", type=str, help="Public IP address of the client node to be added", required=True
     )
-    add_node_args.add_argument("--name", type=str, help="Name of the client node", required=True)
-    add_node_args.add_argument(
+    add_args.add_argument("--name", type=str, help="Name of the client node", required=True)
+    add_args.add_argument(
         "--ssh-user", type=str, help="User account to SSH into on the client node", default="root"
     )
-    add_node_args.add_argument(
+    add_args.add_argument(
         "--ssh-port",
         type=int,
         help="Port on which sshd is listening on the client node",
         default=22,
     )
-    add_node_args.add_argument(
+    add_args.add_argument(
         "--nebula-port",
         type=int,
         help="Port on which nebula must listen on the client node",
         default=4242,
     )
-    add_node_args.add_argument(
+    add_args.add_argument(
         "--lighthouse",
         type=bool,
         help="Whether or not the node is a lighthouse",
         default=False,
     )
-    add_node_args.add_argument(
+    add_args.add_argument(
         "--ufw",
         type=bool,
         help="Set up firewall rules on the client node",
         default=True,
     )
-    add_node_args.add_argument(
+    add_args.add_argument(
         "--docker-ufw",
         type=bool,
         help="Set up firewall rules for Docker containers on the client node",
         default=False,
     )
-    add_node_args.add_argument(
+    add_args.add_argument(
         "--groups",
         nargs="+",
         help="Add host to group",
@@ -70,17 +70,15 @@ if __name__ == "__main__":
     )
     # }}}
 
-    # `remove-node` arguments {{{
-    remove_node_args = subparser.add_parser("remove-node")
-    remove_node_args.add_argument("--name", type=str, help="Name of the client node", required=True)
+    # `remove` arguments {{{
+    remove_args = subparser.add_parser("remove")
+    remove_args.add_argument("--name", type=str, help="Name of the client node", required=True)
     # }}}
 
-    # `generate-node` arguments {{{
-    generate_node_args = subparser.add_parser("generate-node")
-    generate_node_args.add_argument(
-        "--name", type=str, help="Name of the client node", required=True
-    )
-    generate_node_args.add_argument(
+    # `generate` arguments {{{
+    generate_args = subparser.add_parser("generate")
+    generate_args.add_argument("--name", type=str, help="Name of the client node", required=True)
+    generate_args.add_argument(
         "--groups",
         nargs="+",
         help="Add host to group",
@@ -88,19 +86,19 @@ if __name__ == "__main__":
     )
     # }}}
 
-    # `list-nodes` arguments {{{
-    list_nodes_args = subparser.add_parser("list-nodes")
+    # `status` arguments {{{
+    status_nodes_args = subparser.add_parser("status")
     # }}}
 
-    # `push-config` arguments {{{
-    push_config_args = subparser.add_parser("push-config")
-    push_config_args.add_argument("--name", type=str, help="Name of the client node", required=True)
+    # `sync` arguments {{{
+    sync_args = subparser.add_parser("sync")
+    sync_args.add_argument("--name", type=str, help="Name of the client node", required=True)
     # }}}
 
-    # `edit-config` arguments {{{
-    edit_config_args = subparser.add_parser("edit-config")
-    edit_config_args.add_argument("--name", type=str, help="Name of the client node", required=True)
-    edit_config_args.add_argument("--key", type=str, help="Key to edit")
+    # `edit` arguments {{{
+    edit_args = subparser.add_parser("edit")
+    edit_args.add_argument("--name", type=str, help="Name of the client node", required=True)
+    edit_args.add_argument("--key", type=str, help="Key to edit")
     # }}}
 
     args = parser.parse_args()
@@ -131,17 +129,17 @@ if __name__ == "__main__":
     )
 
     # fire routine based on input command
-    if args.command == "add-node":
+    if args.command == "add":
         add_node(args)
-    elif args.command == "remove-node":
+    elif args.command == "remove":
         remove_node(args)
-    elif args.command == "generate-node":
+    elif args.command == "generate":
         generate_node(args)
-    elif args.command == "list-nodes":
+    elif args.command == "status":
         list_nodes(args)
-    elif args.command == "push-config":
+    elif args.command == "sync":
         push_config(args)
-    elif args.command == "edit-config":
+    elif args.command == "edit":
         edit_config(args)
     else:
         print(f"Unknown command: {args.command}")
