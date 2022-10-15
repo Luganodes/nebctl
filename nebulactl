@@ -14,7 +14,15 @@ from ansible.utils.display import initialize_locale
 from ansible.module_utils.common.collections import ImmutableDict
 
 # import all actions
-from actions import add_node, remove_node, generate_node, list_nodes, push_config, edit_config
+from actions import (
+    add_node,
+    remove_node,
+    generate_node,
+    list_nodes,
+    push_config,
+    edit_config,
+    update_groups,
+)
 
 
 if __name__ == "__main__":
@@ -101,6 +109,23 @@ if __name__ == "__main__":
     edit_args.add_argument("--key", type=str, help="Key to edit")
     # }}}
 
+    # `groups` arguments {{{
+    groups_args = subparser.add_parser("groups")
+    groups_args.add_argument("name", type=str, help="Name of the client node")
+    groups_args.add_argument(
+        "--add",
+        nargs="+",
+        help="Add host to groups",
+        default=[],
+    )
+    groups_args.add_argument(
+        "--remove",
+        nargs="+",
+        help="Remove host from groups",
+        default=[],
+    )
+    # }}}
+
     args = parser.parse_args()
 
     # initialize ansible locale
@@ -141,5 +166,7 @@ if __name__ == "__main__":
         push_config(args)
     elif args.command == "edit":
         edit_config(args)
+    elif args.command == "groups":
+        update_groups(args)
     else:
         print(f"Unknown command: {args.command}")

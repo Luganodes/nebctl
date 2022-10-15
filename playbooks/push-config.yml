@@ -34,5 +34,5 @@
         mode: push
       delegate_to: localhost
 
-    - name: Restart service
+    - name: Restart nebula service
       shell: kill -HUP $(pidof nebula)

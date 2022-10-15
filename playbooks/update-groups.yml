@@ -1,0 +1,39 @@
+---
+
+- hosts: localhost
+  tasks:
+    - name: Add target to in-memory inventory
+      add_host:
+        name: "{{ public_ip }}"
+        groups: target_node
+        ansible_user: "{{ ssh_user | default('root') }}"
+        ansible_ssh_port: "{{ ssh_port | default(22) }}"
+
+- name: Add node to admin panel
+  hosts: localhost
+  tasks:
+    - name: Remove existing certificates
+      file:
+        path: "{{ nebula_control_dir }}/hosts/{{ node_name }}/{{ item }}"
+        state: absent
+      with_items:
+        - ca
+        - host.crt
+        - host.key
+
+    - name: Sign certificates
+      command: nebula-cert sign -ca-key "{{ nebula_control_dir }}/ca/ca.key" --ca-crt "{{ nebula_control_dir }}/ca/ca.crt" -out-key "{{ nebula_control_dir }}/hosts/{{ node_name }}/host.key" -out-crt "{{ nebula_control_dir }}/hosts/{{ node_name }}/host.crt" -name "{{ node_name }}" -ip "{{ nebula_ip }}/16" -groups "{{ groups }}"
+
+- name: Set up target node
+  hosts: target_node
+  tasks:
+    - name: Push nebula configs to node
+      synchronize: 
+        src: "{{ nebula_control_dir }}/hosts/{{ node_name }}/"
+        dest: "/etc/nebula/"
+        dest_port: "{{ ssh_port }}"
+        mode: push
+      delegate_to: localhost
+
+    - name: Restart nebula service
+      shell: kill -HUP $(pidof nebula)
