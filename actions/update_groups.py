@@ -9,6 +9,11 @@ from utils import hosts, settings
 
 # method to edit updated config files to the node
 def update_groups(args):
+    hosts.remove_group(1, "t")
+
+    return
+
+
     NEBULA_CONTROL_DIR = os.environ.get("NEBULA_CONTROL_DIR")
     PLAYBOOK_SOURCE = [f"{NEBULA_CONTROL_DIR}/playbooks/update-groups.yml"]
     INVENTORY_SOURCE = [f"{NEBULA_CONTROL_DIR}/store/inventory"]

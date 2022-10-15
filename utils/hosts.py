@@ -110,6 +110,10 @@ def delete_host(id):
             target_host_query = delete(Host).where(Host.id == id)
             session.execute(target_host_query)
             session.commit()
+
+            target_group_query = delete(HostGroup).where(HostGroup.host_id == id)
+            session.execute(target_group_query)
+            session.commit()
         except:
             session.rollback()
 
@@ -132,10 +136,10 @@ def add_group(host_id, group_name):
 def remove_group(host_id, group_name):
     with Session(engine) as session:
         try:
-            target_group = select(HostGroup).where(
+            target_group_query = delete(HostGroup).where(
                 and_(HostGroup.host_id == host_id, HostGroup.name == group_name)
             )
-            session.delete(target_group)
+            session.execute(target_group_query)
             session.commit()
         except:
             session.rollback()
