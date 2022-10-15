@@ -35,7 +35,4 @@
       delegate_to: localhost
 
     - name: Restart service
-      systemd:
-        name: nebula
-        state: restarted
-
+      shell: kill -HUP $(pidof nebula)
