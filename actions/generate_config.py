@@ -9,9 +9,9 @@ from ansible.executor.playbook_executor import PlaybookExecutor
 from utils import settings, hosts, ip, configs, callbacks
 
 # method to generate configs for a node
-def generate_node(args):
+def generate_config(args):
     NEBULA_CONTROL_DIR = os.environ.get("NEBULA_CONTROL_DIR")
-    PLAYBOOK_SOURCE = [f"{NEBULA_CONTROL_DIR}/playbooks/generate-node.yml"]
+    PLAYBOOK_SOURCE = [f"{NEBULA_CONTROL_DIR}/playbooks/generate-config.yml"]
     INVENTORY_SOURCE = [f"{NEBULA_CONTROL_DIR}/store/inventory"]
 
     # append domain to input name
@@ -31,6 +31,10 @@ def generate_node(args):
     node_config = f"/tmp/{node_name}{int(time.time())}.yml"
     configs.generate_client_config(4242, node_config)
 
+    # generate network config
+    network_config = f"/tmp/nebula1{int(time.time())}.network"
+    configs.generate_network_config(network_config, node_config)
+
     config = {
         "playbook": PLAYBOOK_SOURCE,
         "inventory": INVENTORY_SOURCE,
@@ -38,7 +42,8 @@ def generate_node(args):
             "nebula_ip": nebula_ip,
             "node_name": node_name,
             "node_config": node_config,
-            "groups": ",".join(args.groups),
+            "network_config": network_config,
+            "nebula_groups": ",".join(args.groups),
             "nebula_control_dir": NEBULA_CONTROL_DIR,
         },
     }

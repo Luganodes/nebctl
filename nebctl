@@ -17,11 +17,12 @@ from ansible.module_utils.common.collections import ImmutableDict
 from actions import (
     add_node,
     remove_node,
-    generate_node,
     list_nodes,
     push_config,
     edit_config,
     update_groups,
+    generate_config,
+    import_config,
 )
 
 
@@ -83,17 +84,6 @@ if __name__ == "__main__":
     remove_args.add_argument("name", type=str, help="Name of the client node")
     # }}}
 
-    # `generate` arguments {{{
-    generate_args = subparser.add_parser("generate")
-    generate_args.add_argument("name", type=str, help="Name of the client node")
-    generate_args.add_argument(
-        "--groups",
-        nargs="+",
-        help="Add host to group",
-        default=[],
-    )
-    # }}}
-
     # `status` arguments {{{
     status_nodes_args = subparser.add_parser("status")
     # }}}
@@ -124,6 +114,22 @@ if __name__ == "__main__":
         help="Remove host from groups",
         default=[],
     )
+    # }}}
+
+    # `generate` arguments {{{
+    generate_args = subparser.add_parser("generate")
+    generate_args.add_argument("name", type=str, help="Name of the client node")
+    generate_args.add_argument(
+        "--groups",
+        nargs="+",
+        help="Add host to group",
+        default=[],
+    )
+    # }}}
+
+    # `import` arguments {{{
+    import_args = subparser.add_parser("import")
+    import_args.add_argument("config", type=str, help="Path to node configuration zip")
     # }}}
 
     args = parser.parse_args()
@@ -158,8 +164,6 @@ if __name__ == "__main__":
         add_node(args)
     elif args.command == "remove":
         remove_node(args)
-    elif args.command == "generate":
-        generate_node(args)
     elif args.command == "status":
         list_nodes(args)
     elif args.command == "sync":
@@ -168,5 +172,9 @@ if __name__ == "__main__":
         edit_config(args)
     elif args.command == "groups":
         update_groups(args)
+    elif args.command == "generate":
+        generate_config(args)
+    elif args.command == "import":
+        import_config(args)
     else:
         print(f"Unknown command: {args.command}")

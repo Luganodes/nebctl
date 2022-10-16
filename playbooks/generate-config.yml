@@ -1,6 +1,6 @@
 ---
 
-- name: Add node to admin panel and zip configs
+- name: Adding node to admin panel and zip configs
   hosts: localhost
   tasks:
     - name: Creating node directory
@@ -9,7 +9,7 @@
         state: directory
 
     - name: Signing certificates
-      command: nebula-cert sign -ca-key "{{ nebula_control_dir }}/ca/ca.key" --ca-crt "{{ nebula_control_dir }}/ca/ca.crt" -out-key "{{ nebula_control_dir }}/hosts/{{ node_name }}/host.key" -out-crt "{{ nebula_control_dir }}/hosts/{{ node_name }}/host.crt" -name "{{ node_name }}" -ip "{{ nebula_ip }}/16" -groups "{{ groups }}"
+      command: nebula-cert sign -ca-key "{{ nebula_control_dir }}/ca/ca.key" --ca-crt "{{ nebula_control_dir }}/ca/ca.crt" -out-key "{{ nebula_control_dir }}/hosts/{{ node_name }}/host.key" -out-crt "{{ nebula_control_dir }}/hosts/{{ node_name }}/host.crt" -name "{{ node_name }}" -ip "{{ nebula_ip }}/16" -groups "{{ nebula_groups }}"
 
     - name: Generating node config with lighthouse hosts
       copy:
@@ -22,5 +22,8 @@
           - "{{ nebula_control_dir }}/hosts/{{ node_name }}/config.yml"
           - "{{ nebula_control_dir }}/hosts/{{ node_name }}/host.crt"
           - "{{ nebula_control_dir }}/hosts/{{ node_name }}/host.key"
+          - "{{ nebula_control_dir }}/ca/ca.crt"
+          - "{{ nebula_control_dir }}/defaults/nebula.service"
+          - "{{ network_config }}"
         dest: "{{ nebula_control_dir }}/hosts/{{ node_name }}/config.zip"
         format: zip
