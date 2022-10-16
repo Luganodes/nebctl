@@ -17,8 +17,7 @@ def import_config(args):
         "playbook": PLAYBOOK_SOURCE,
         "inventory": INVENTORY_SOURCE,
         "extra_vars": {
-            "node_config": args.config,
-            "groups": ",".join(args.groups),
+            "node_config": os.path.abspath(args.config),
             "nebula_control_dir": NEBULA_CONTROL_DIR,
         },
     }

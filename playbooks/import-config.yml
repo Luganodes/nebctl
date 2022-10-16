@@ -1,13 +1,7 @@
 ---
 
 - name: Setting up current node
-  host: localhost
-  vars_prompt:
-    - name: "ansible_become_pass"
-      prompt: "Sudo password"
-      private: yes
-  become: yes
-  become_user: root
+  hosts: localhost
   tasks:
     - name: Creating Nebula config directory
       file:
@@ -25,16 +19,21 @@
     - name: Unzipping configs
       unarchive:
         src: "{{ node_config }}"
+        dest: /tmp
+
+    - name: Copying Nebula configs
+      synchronize:
+        src: /tmp/nebula/
         dest: /etc/nebula
       
     - name: Copying service config
-      copy:
-        src: /etc/nebula/nebula.service
+      synchronize:
+        src: /tmp/defaults/nebula.service
         dest: /etc/systemd/system/nebula.service
       
     - name: Copying network config
-      copy:
-        src: /etc/nebula/nebula1.network
+      synchronize:
+        src: /tmp/defaults/nebula1.network
         dest: /etc/systemd/network/nebula1.network
 
     - name: Restarting systemd-resolved
@@ -57,23 +56,13 @@
       command: "{{ item }}"
       with_items:
         - "ufw allow 4242/udp"
-        - "ufw allow {{ ssh_port }}/tcp"
         - "ufw allow in on nebula1"
-        - "ufw --force enable"
         - "ufw reload"
-      when: enable_ufw | bool
-
-    - name: Enabling UFW
-      systemd:
-        name: ufw
-        enabled: true
-        state: started
-      when: enable_ufw | bool
 
     - name: Cleaning up
       file:
         path: "{{ item }}"
         state: absent
       with_items:
-        - /etc/nebula/nebula.service
-        - /etc/nebula/nebula1.network
+        - /tmp/nebula
+        - /tmp/defaults
