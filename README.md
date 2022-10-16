@@ -32,15 +32,17 @@
 
 [Nebula](https://github.com/slackhq/nebula) is a scalable overlay networking tool with a focus on performance, simplicity and security. It lets you seamlessly connect computers anywhere in the world.
 
-Nebula incorporates a number of existing concepts like encryption, security groups, certificates, and tunneling, and each of those individual pieces existed before Nebula in various forms. What makes Nebula different to existing offerings is that it brings all of these ideas together, resulting in a sum that is greater than its individual parts.
+Nebula incorporates a number of existing concepts like encryption, security groups, certificates, and tunneling, and each of those individual pieces existed before Nebula in various forms. What makes Nebula different to existing offerings is that it brings all of these ideas together, resulting in a sum that is greater than its individual parts.  
+Unlike other VPN solutions like Tailscale and ZeroTier, Nebula is **agentless**. It requires no daemon or background agent to listen for updates or configuration changes and propagate them.  
+A Nebula network is decentralized and **fault-tolerant**. Due to the existence of multiple lighthouse nodes, it does not possess a single point of failure.  
+Nebula also comes with a built-in firewall, making it easy to **secure** the network without needing to use other third-party software.
 
 
 ## Why nebctl?
 
 ![demo](docs/demo.gif)
 
-TODO
-
+`nebctl` was built to simplify the process of setting up and maintaining a Nebula network by automating most of the steps required. It aims to serve as a seamless, one-click solution for managing a Nebula network.
 
 ## Getting Started
 
