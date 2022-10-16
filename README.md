@@ -1,6 +1,6 @@
 <div align="center">
   <a href="">
-    <img src="docs/nebulactl.jpeg" alt="nebulactl" >
+    <img src="docs/nebctl.jpeg" alt="nebctl" >
   </a>
 
   <p align="center">
@@ -13,7 +13,7 @@
   <summary>Table of Contents</summary>
   <ol>
     <li><a href="#what-is-nebula">What is Nebula?</a></li>
-    <li><a href="#why-nebulactl">Why nebulactl?</a></li>
+    <li><a href="#why-nebctl">Why nebctl?</a></li>
     <li>
       <a href="#getting-started">Getting Started</a>
       <ul>
@@ -35,7 +35,7 @@
 Nebula incorporates a number of existing concepts like encryption, security groups, certificates, and tunneling, and each of those individual pieces existed before Nebula in various forms. What makes Nebula different to existing offerings is that it brings all of these ideas together, resulting in a sum that is greater than its individual parts.
 
 
-## Why nebulactl?
+## Why nebctl?
 
 ![TODO: Screenshot/GIF](#)
 
@@ -44,7 +44,7 @@ TODO
 
 ## Getting Started
 
-To get nebulactl up and running, follow these steps.
+To get nebctl up and running, follow these steps.
 
 ### Dependencies
 * pip
@@ -59,7 +59,7 @@ To get nebulactl up and running, follow these steps.
 ```sh
 $ sh -c "$(curl -sSfl https://gitlab.com/lgns-platform-team/nebula-control/-/raw/main/install.sh)"
 ```
-2. Copy existing CA certificates, if any, to `/opt/nebulactl/ca`. Otherwise, create one.
+2. Copy existing CA certificates, if any, to `/opt/nebctl/ca`. Otherwise, create one.
 ```sh
 $ cd /opt/nebula-control/ca; nebula-cert ca -name "<name>" -duration 43834h
 ```
@@ -68,7 +68,7 @@ $ cd /opt/nebula-control/ca; nebula-cert ca -name "<name>" -duration 43834h
 ## Usage
 
 ```sh
-$ nebulactl COMMAND [-h] [--options]
+$ nebctl COMMAND [-h] [--options]
 ```
 ### Available commands
 
@@ -85,7 +85,7 @@ $ nebulactl COMMAND [-h] [--options]
 ### Command options and arguments
 ####  `add`
 ```sh
-$ nebulactl add [-h] --ip IP [--ssh-user SSH_USER] [--ssh-port SSH_PORT] 
+$ nebctl add [-h] --ip IP [--ssh-user SSH_USER] [--ssh-port SSH_PORT] 
                 [--nebula-port NEBULA_PORT] [--lighthouse LIGHTHOUSE]
 	            [--ufw UFW] [--docker-ufw DOCKER_UFW] 
 	            [--groups GROUPS [GROUPS ...]]
@@ -107,33 +107,33 @@ To set up the host machine as a Nebula node, make sure its SSH key also exists i
 
 ####  `remove`
 ```sh
-$ nebulactl remove [-h] name
+$ nebctl remove [-h] name
 ```
 - `name`: Name of the client node on this network
 
 #### `generate`
 ```sh
-$ nebulactl generate [-h] [--groups GROUPS [GROUPS ...]] name
+$ nebctl generate [-h] [--groups GROUPS [GROUPS ...]] name
 ```
 - `name`: Name of the client node on this network
 - `--groups`: Nebula groups to which this node belongs to (default: [])
 
 #### `edit`
 ```sh
-$ nebulactl edit [-h] [--key KEY] name
+$ nebctl edit [-h] [--key KEY] name
 ```
 - `name`: Name of the client node on this network
 - `--key`: Configuration option key at which the editor opens (default: none)
 
 #### `sync`
 ```sh
-$ nebulactl sync [-h] name
+$ nebctl sync [-h] name
 ```
 - `name`: Name of the client node on this network
 
 #### `groups`
 ```sh
-$ nebulactl groups [-h] [--add ADD [ADD ...]] [--remove REMOVE [REMOVE ...]] name
+$ nebctl groups [-h] [--add ADD [ADD ...]] [--remove REMOVE [REMOVE ...]] name
 ```
 - `name`: Name of the client node on this network
 - `--add`: Groups to add this node to (default: [])
@@ -144,7 +144,7 @@ $ nebulactl groups [-h] [--add ADD [ADD ...]] [--remove REMOVE [REMOVE ...]] nam
 - [x] Remote node management
 - [x] Implement generation of distributable configurations
 - [ ] Update configurations of all existing nodes upon new lighthouse addition
-- [ ] Interface to edit nebulactl settings
+- [ ] Interface to edit nebctl settings
 
 See [open issues](#) for a full list of proposed features (and known issues).
 

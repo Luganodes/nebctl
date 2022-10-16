@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-INSTALL_DIR=/opt/nebulactl
+INSTALL_DIR=/opt/nebctl
 REPO_URL=
 
 # clone the repository
@@ -21,9 +21,9 @@ mkdir -p $INSTALL_DIR/{ca,hosts,store}
 chown -R $USER:$USER $INSTALL_DIR
 
 # give executable permissions
-chmod +x $INSTALL_DIR/nebulactl
+chmod +x $INSTALL_DIR/nebctl
 
 # create symlink to script
-ln -s $INSTALL_DIR/nebulactl /usr/bin/nebulactl
+ln -s $INSTALL_DIR/nebctl /usr/bin/nebctl
 
 echo "Installation complete."
