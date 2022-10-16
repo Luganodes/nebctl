@@ -1,6 +1,6 @@
 <div align="center">
   <a href="">
-    <img src="docs/nebctl.jpeg" alt="nebctl" >
+    <img src="docs/nebctl.png" alt="nebctl" >
   </a>
 
   <p align="center">
@@ -37,7 +37,7 @@ Nebula incorporates a number of existing concepts like encryption, security grou
 
 ## Why nebctl?
 
-![TODO: Screenshot/GIF](#)
+![demo](docs/demo.gif)
 
 TODO
 
