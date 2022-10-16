@@ -76,11 +76,12 @@ $ nebctl COMMAND [-h] [--options]
 |:---------------------:| ---------------------------------------------------------------------- |
 | **`add`**               | Set up a new remotely managed node on the network.                     |        
 | **`remove`**            | Remove a node from network.                                            |
-| **`generate`**          | Generate distributable configuration files for a new node.             |
 | **`status`**            | Show all nodes managed by the application.                             |
 | **`edit`**              | Edit configuration of a remotely managed node.                         |
 | **`sync`**              | Sync local configuration changes with a remotely managed node.         |
 | **`groups`**            | Manage groups that the target node belongs to.                         |
+| **`generate`**          | Generate distributable configuration files for a new node.             |
+| **`import`**            | Import configuration files and set up the current host as a node.      |
 
 ### Command options and arguments
 ####  `add`
@@ -111,13 +112,6 @@ $ nebctl remove [-h] name
 ```
 - `name`: Name of the client node on this network
 
-#### `generate`
-```sh
-$ nebctl generate [-h] [--groups GROUPS [GROUPS ...]] name
-```
-- `name`: Name of the client node on this network
-- `--groups`: Nebula groups to which this node belongs to (default: [])
-
 #### `edit`
 ```sh
 $ nebctl edit [-h] [--key KEY] name
@@ -138,6 +132,19 @@ $ nebctl groups [-h] [--add ADD [ADD ...]] [--remove REMOVE [REMOVE ...]] name
 - `name`: Name of the client node on this network
 - `--add`: Groups to add this node to (default: [])
 - `--remove`: Groups to remove this node from (default: [])
+
+#### `generate`
+```sh
+$ nebctl generate [-h] [--groups GROUPS [GROUPS ...]] name
+```
+- `name`: Name of the client node on this network
+- `--groups`: Nebula groups to which this node belongs to (default: [])
+
+#### `import`
+```sh
+$ nebctl import [-h] config
+```
+- `config`: Path to the config.zip distributed by the admin
 
 
 ## Roadmap
