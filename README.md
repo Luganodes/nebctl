@@ -80,14 +80,15 @@ $ nebulactl COMMAND [-h] [--options]
 | **`status`**            | Show all nodes managed by the application.                             |
 | **`edit`**              | Edit configuration of a remotely managed node.                         |
 | **`sync`**              | Sync local configuration changes with a remotely managed node.         |
+| **`groups`**            | Manage groups that the target node belongs to.                         |
 
 ### Command options and arguments
 ####  `add`
 ```sh
 $ nebulactl add [-h] --ip IP [--ssh-user SSH_USER] [--ssh-port SSH_PORT] 
                 [--nebula-port NEBULA_PORT] [--lighthouse LIGHTHOUSE]
-	              [--ufw UFW] [--docker-ufw DOCKER_UFW] 
-	              [--groups GROUPS [GROUPS ...]]
+	            [--ufw UFW] [--docker-ufw DOCKER_UFW] 
+	            [--groups GROUPS [GROUPS ...]]
                 name
 ```
 - `name`: Name of the client node on this network
@@ -130,12 +131,19 @@ $ nebulactl sync [-h] name
 ```
 - `name`: Name of the client node on this network
 
+#### `groups`
+```sh
+$ nebulactl groups [-h] [--add ADD [ADD ...]] [--remove REMOVE [REMOVE ...]] name
+```
+- `name`: Name of the client node on this network
+- `--add`: Groups to add this node to (default: [])
+- `--remove`: Groups to remove this node from (default: [])
+
 
 ## Roadmap
 - [x] Remote node management
 - [x] Implement generation of distributable configurations
 - [ ] Update configurations of all existing nodes upon new lighthouse addition
-- [ ] Support group editing
 - [ ] Interface to edit nebulactl settings
 
 See [open issues](#) for a full list of proposed features (and known issues).
