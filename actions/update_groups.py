@@ -5,7 +5,7 @@ from ansible.parsing.dataloader import DataLoader
 from ansible.inventory.manager import InventoryManager
 from ansible.executor.playbook_executor import PlaybookExecutor
 
-from utils import hosts, settings
+from utils import hosts, settings, callbacks
 
 # method to edit updated config files to the node
 def update_groups(args):
@@ -70,19 +70,21 @@ def update_groups(args):
         passwords=passwords,
     )
 
+    # set progress callback
+    progress = callbacks.ProgressCallback()
+    pbex._tqm._stdout_callback = progress
+
     # run the playbook
     results = pbex.run()
 
-    # get terminal dimensions for status display
-    terminal_size = os.get_terminal_size()
+    # print status
+    if results != 0:
+        progress.failure("Failed to update node groups!")
+    else:
+        # update group database
+        for group in args.add:
+            hosts.add_group(target_host.id, group)
+        for group in args.remove:
+            hosts.remove_group(target_host.id, group)
 
-    # update group database
-    for group in args.add:
-        hosts.add_group(target_host.id, group)
-
-    for group in args.remove:
-        hosts.remove_group(target_host.id, group)
-
-    print("=" * terminal_size.columns)
-    print("Node groups updated successfully!")
-    print("=" * terminal_size.columns)
+        progress.success("Successfully updated node groups!")

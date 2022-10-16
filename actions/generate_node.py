@@ -6,7 +6,7 @@ from ansible.parsing.dataloader import DataLoader
 from ansible.inventory.manager import InventoryManager
 from ansible.executor.playbook_executor import PlaybookExecutor
 
-from utils import settings, hosts, ip, configs
+from utils import settings, hosts, ip, configs, callbacks
 
 # method to generate configs for a node
 def generate_node(args):
@@ -67,14 +67,18 @@ def generate_node(args):
         passwords=passwords,
     )
 
+    # set progress callback
+    progress = callbacks.ProgressCallback()
+    pbex._tqm._stdout_callback = progress
+
     # run the playbook
     results = pbex.run()
 
-    # get terminal dimensions for status display
-    terminal_size = os.get_terminal_size()
-
-    # add IP to list and print new node details if successful
-    if results == 0:
+    # print status
+    if results != 0:
+        progress.failure("Failed to generate node config!")
+    else:
+        # add host to database
         hosts.add_host(
             node_name,
             None,
@@ -82,11 +86,9 @@ def generate_node(args):
             groups=args.groups,
         )
 
-        print("=" * terminal_size.columns)
-        print("Node generated successfully!\n")
+        progress.success("Successfully generated node config!")
         print(f"Name:               {node_name}")
         print(f"Nebula IP:          {nebula_ip}\n")
         print(
             f"Distributable config zip stored at: {NEBULA_CONTROL_DIR}/hosts/{node_name}/config.zip"
         )
-        print("=" * terminal_size.columns)

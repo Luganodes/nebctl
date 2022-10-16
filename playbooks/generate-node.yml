@@ -3,20 +3,20 @@
 - name: Add node to admin panel and zip configs
   hosts: localhost
   tasks:
-    - name: Create node directory
+    - name: Creating node directory
       file:
         path: "{{ nebula_control_dir }}/hosts/{{ node_name }}"
         state: directory
 
-    - name: Sign certificates
+    - name: Signing certificates
       command: nebula-cert sign -ca-key "{{ nebula_control_dir }}/ca/ca.key" --ca-crt "{{ nebula_control_dir }}/ca/ca.crt" -out-key "{{ nebula_control_dir }}/hosts/{{ node_name }}/host.key" -out-crt "{{ nebula_control_dir }}/hosts/{{ node_name }}/host.crt" -name "{{ node_name }}" -ip "{{ nebula_ip }}/16" -groups "{{ groups }}"
 
-    - name: Generate node config with lighthouse hosts
+    - name: Generating node config with lighthouse hosts
       copy:
         src: "{{ node_config }}"
         dest: "{{ nebula_control_dir }}/hosts/{{ node_name }}/config.yml"
 
-    - name: Create a zip of the configs
+    - name: Creating a zip of the configs
       archive:
         path: 
           - "{{ nebula_control_dir }}/hosts/{{ node_name }}/config.yml"

@@ -2,17 +2,17 @@
 
 - hosts: localhost
   tasks:
-    - name: Add target to in-memory inventory
+    - name: Adding target to in-memory inventory
       add_host:
         name: "{{ public_ip }}"
         groups: target_node
         ansible_user: "{{ ssh_user | default('root') }}"
         ansible_ssh_port: "{{ ssh_port | default(22) }}"
 
-- name: Add node to admin panel
+- name: Adding node to admin panel
   hosts: localhost
   tasks:
-    - name: Remove existing certificates
+    - name: Removing existing certificates
       file:
         path: "{{ nebula_control_dir }}/hosts/{{ node_name }}/{{ item }}"
         state: absent
@@ -21,13 +21,13 @@
         - host.crt
         - host.key
 
-    - name: Sign certificates
+    - name: Signing certificates
       command: nebula-cert sign -ca-key "{{ nebula_control_dir }}/ca/ca.key" --ca-crt "{{ nebula_control_dir }}/ca/ca.crt" -out-key "{{ nebula_control_dir }}/hosts/{{ node_name }}/host.key" -out-crt "{{ nebula_control_dir }}/hosts/{{ node_name }}/host.crt" -name "{{ node_name }}" -ip "{{ nebula_ip }}/16" -groups "{{ nebula_groups }}"
 
-- name: Set up target node
+- name: Setting up target node
   hosts: target_node
   tasks:
-    - name: Push nebula configs to node
+    - name: Pushing Nebula configs to node
       synchronize: 
         src: "{{ nebula_control_dir }}/hosts/{{ node_name }}/"
         dest: "/etc/nebula/"
@@ -35,8 +35,7 @@
         mode: push
       delegate_to: localhost
 
-    - name: Restart nebula service
+    - name: Restarting Nebula service
       systemd:
         name: nebula
         state: restarted
-

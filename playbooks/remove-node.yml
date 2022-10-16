@@ -2,7 +2,7 @@
 
 - hosts: localhost
   tasks:
-    - name: Add target node to in-memory inventory
+    - name: Adding target node to in-memory inventory
       add_host:
         name: "{{ public_ip }}"
         groups: target_nodes
@@ -10,48 +10,48 @@
         ansible_ssh_port: "{{ ssh_port | default('22') }}"
       when: public_ip
 
-- name: Remove node from admin panel
+- name: Removing node from admin panel
   hosts: localhost
   tasks:
-    - name: Delete node directory
+    - name: Deleting node directory
       file:
         path: "{{ nebula_control_dir }}/hosts/{{ node_name }}"
         state: absent
       ignore_errors: yes
 
-- name: Undo changes on the target node
+- name: Undoing changes on the target node
   hosts: target_nodes
   tasks:
-    - name: Disable and stop Nebula service
+    - name: Disabling and stop Nebula service
       systemd:
         name: nebula
         enabled: false
         state: stopped
       ignore_errors: yes
 
-    - name: Delete config directory
+    - name: Deleting config directory
       file:
         path: /etc/nebula
         state: absent
       ignore_errors: yes
 
-    - name: Delete network config
+    - name: Deleting network config
       file:
         path: /etc/systemd/network/nebula1.network
         state: absent
       ignore_errors: yes
 
-    - name: Restart systemd-resolved
+    - name: Restarting systemd-resolved
       systemd:
         name: systemd-resolved
         state: restarted
 
-    - name: Restart systemd-networkd
+    - name: Restarting systemd-networkd
       systemd:
         name: systemd-networkd
         state: restarted
 
-    - name: Delete Nebula binaries
+    - name: Deleting Nebula binaries
       file:
         path: "/usr/bin/{{ item }}"
         state: absent
@@ -60,12 +60,12 @@
         - nebula-cert
       ignore_errors: yes
 
-    - name: Delete Nebula service files
+    - name: Deleting Nebula service files
       file:
         path: /etc/systemd/system/nebula.service
         state: absent
       ignore_errors: yes
 
-    - name: Reset UFW rules
+    - name: Resetting UFW rules
       ufw:
         state: reset

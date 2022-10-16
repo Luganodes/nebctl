@@ -5,7 +5,7 @@ from ansible.parsing.dataloader import DataLoader
 from ansible.inventory.manager import InventoryManager
 from ansible.executor.playbook_executor import PlaybookExecutor
 
-from utils import hosts, settings
+from utils import hosts, settings, callbacks
 
 # method to remove a node
 def remove_node(args):
@@ -57,15 +57,17 @@ def remove_node(args):
         passwords=passwords,
     )
 
+    # set progress callback
+    progress = callbacks.ProgressCallback()
+    pbex._tqm._stdout_callback = progress
+
     # run the playbook
     results = pbex.run()
 
-    # remove host from database
-    hosts.delete_host(target_host.id)
-
-    # get terminal dimensions for status display
-    terminal_size = os.get_terminal_size()
-
-    print("=" * terminal_size.columns)
-    print("Node removed successfully!")
-    print("=" * terminal_size.columns)
+    # print status
+    if results != 0:
+        progress.failure("Failed to remove node!")
+    else:
+        # remove host from database
+        hosts.delete_host(target_host.id)
+        progress.success("Successfully removed node!")

@@ -2,7 +2,7 @@
 
 - hosts: localhost
   tasks:
-    - name: Add target to in-memory inventory
+    - name: Adding target to in-memory inventory
       add_host:
         name: "{{ public_ip }}"
         groups: target_node
@@ -10,10 +10,10 @@
         ansible_ssh_port: "{{ ssh_port | default(22) }}"
       when: public_ip
 
-- name: Update node configuration zip if not remotely controllable
+- name: Updating node configuration zip if not remotely controllable
   hosts: localhost
   tasks:
-    - name: Update config zip
+    - name: Updating config zip
       archive:
         path: 
           - "{{ nebula_control_dir }}/hosts/{{ node_name }}/config.yml"
@@ -23,10 +23,10 @@
         format: zip
       when: not public_ip
 
-- name: Sync configs and restart nebula service on the target node if remotely managed
+- name: Syncing configs and restart Nebula service on the target node if remotely managed
   hosts: target_node
   tasks:
-    - name: Push configs to node
+    - name: Pushing configs to node
       synchronize: 
         src: "{{ nebula_control_dir }}/hosts/{{ node_name }}/"
         dest: "/etc/nebula/"
@@ -34,5 +34,5 @@
         mode: push
       delegate_to: localhost
 
-    - name: Restart nebula service
+    - name: Restarting Nebula service
       shell: kill -HUP $(pidof nebula)

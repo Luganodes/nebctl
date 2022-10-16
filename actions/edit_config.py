@@ -7,7 +7,7 @@ from ansible.parsing.dataloader import DataLoader
 from ansible.inventory.manager import InventoryManager
 from ansible.executor.playbook_executor import PlaybookExecutor
 
-from utils import hosts, settings
+from utils import hosts, settings, callbacks
 
 # method to edit updated config files to the node
 def edit_config(args):
@@ -81,12 +81,15 @@ def edit_config(args):
         passwords=passwords,
     )
 
+    # set progress callback
+    progress = callbacks.ProgressCallback()
+    pbex._tqm._stdout_callback = progress
+
     # run the playbook
     results = pbex.run()
 
-    # get terminal dimensions for status display
-    terminal_size = os.get_terminal_size()
-
-    print("=" * terminal_size.columns)
-    print("Node config edited successfully!")
-    print("=" * terminal_size.columns)
+    # print status
+    if results != 0:
+        progress.failure("Failed to edit node config!")
+    else:
+        progress.success("Successfully edited node config!")

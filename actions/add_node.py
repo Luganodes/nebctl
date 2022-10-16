@@ -6,7 +6,7 @@ from ansible.parsing.dataloader import DataLoader
 from ansible.inventory.manager import InventoryManager
 from ansible.executor.playbook_executor import PlaybookExecutor
 
-from utils import settings, hosts, ip, configs
+from utils import settings, hosts, ip, configs, callbacks
 
 # method to add a node
 def add_node(args):
@@ -85,15 +85,16 @@ def add_node(args):
         passwords=passwords,
     )
 
+    # set progress callback
+    progress = callbacks.ProgressCallback()
+    pbex._tqm._stdout_callback = progress
+
     # run the playbook
     results = pbex.run()
 
-    # get terminal dimensions for status display
-    terminal_size = os.get_terminal_size()
-
-    # rollback changes if error
+    # print status
     if results != 0:
-        print("Error encountered. Rolling back changes...")
+        progress.warn("Error encountered. Rolling back changes...")
         rollback_pbex = PlaybookExecutor(
             playbooks=config["rollback"],
             inventory=inventory,
@@ -101,13 +102,16 @@ def add_node(args):
             loader=loader,
             passwords=passwords,
         )
+
+        # set rollback progress callback
+        rollback_progress = callbacks.ProgressCallback()
+        rollback_pbex._tqm._stdout_callback = rollback_progress
+
+        # run rollback playbook
         rollback_pbex.run()
 
-        print("=" * terminal_size.columns)
-        print("Failed to add node!")
-        print("=" * terminal_size.columns)
+        rollback_progress.failure("Failed to add node!")
 
-    # add IP to list and print new node details if successful
     else:
         hosts.add_host(
             node_name,
@@ -120,12 +124,10 @@ def add_node(args):
             groups=args.groups,
         )
 
-        print("=" * terminal_size.columns)
-        print("Node added successfully!\n")
+        progress.success("Successfully added node!")
         print(f"Host:               {node_name}")
         print(f"Public IP:          {args.ip}")
         print(f"Nebula IP:          {nebula_ip}")
         print(f"Lighthouse:         {args.lighthouse}")
         print(f"UFW Enabled:        {args.ufw}")
         print(f"Docker UFW Enabled: {args.docker_ufw}")
-        print("=" * terminal_size.columns)
