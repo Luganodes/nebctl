@@ -87,10 +87,10 @@ $ nebctl COMMAND [-h] [--options]
 ####  `add`
 ```sh
 $ nebctl add [-h] --ip IP [--ssh-user SSH_USER] [--ssh-port SSH_PORT] 
-                [--nebula-port NEBULA_PORT] [--lighthouse LIGHTHOUSE]
-	            [--ufw UFW] [--docker-ufw DOCKER_UFW] 
-	            [--groups GROUPS [GROUPS ...]]
-                name
+             [--nebula-port NEBULA_PORT] [--lighthouse LIGHTHOUSE]
+             [--ufw UFW] [--docker-ufw DOCKER_UFW] 
+             [--groups GROUPS [GROUPS ...]]
+             name
 ```
 - `name`: Name of the client node on this network
 - `--ip`: Public IP address of the client node
