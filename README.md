@@ -51,7 +51,13 @@ To get nebctl up and running, follow these steps.
   ```sh
   # apt install python3-pip
   ```
-  For other package managers, check https://pip.pypa.io/en/stable/installation/.
+  For other package managers, check https://pip.pypa.io/en/stable/installation/
+
+* unzip
+  ```sh
+  # apt install unzip
+  ```
+  For other package managers, check https://www.tecmint.com/install-zip-and-unzip-in-linux/
 
 ### Installation
 
@@ -119,6 +125,8 @@ $ nebctl edit [-h] [--key KEY] name
 - `name`: Name of the client node on this network
 - `--key`: Configuration option key at which the editor opens (default: none)
 
+**NOTE**: Edit commands are executed on the client via its Nebula IP. This requires the host to also be connected to the Nebula network.
+
 #### `sync`
 ```sh
 $ nebctl sync [-h] name
@@ -142,7 +150,7 @@ $ nebctl generate [-h] [--groups GROUPS [GROUPS ...]] name
 
 #### `import`
 ```sh
-$ nebctl import [-h] config
+# nebctl import [-h] config
 ```
 - `config`: Path to the config.zip distributed by the admin
 
@@ -152,6 +160,7 @@ $ nebctl import [-h] config
 - [x] Implement generation of distributable configurations
 - [ ] Update configurations of all existing nodes upon new lighthouse addition
 - [ ] Interface to edit nebctl settings
+- [ ] Better error handling and display
 
 See [open issues](#) for a full list of proposed features (and known issues).
 

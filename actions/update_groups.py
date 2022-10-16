@@ -36,7 +36,6 @@ def update_groups(args):
         "playbook": PLAYBOOK_SOURCE,
         "inventory": INVENTORY_SOURCE,
         "extra_vars": {
-            "public_ip": target_host.public_ip,
             "nebula_ip": target_host.nebula_ip,
             "ssh_user": target_host.ssh_user,
             "ssh_port": target_host.ssh_port,

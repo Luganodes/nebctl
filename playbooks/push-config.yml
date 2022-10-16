@@ -4,11 +4,11 @@
   tasks:
     - name: Adding target to in-memory inventory
       add_host:
-        name: "{{ public_ip }}"
+        name: "{{ nebula_ip }}"
         groups: target_node
         ansible_user: "{{ ssh_user | default('root') }}"
         ansible_ssh_port: "{{ ssh_port | default(22) }}"
-      when: public_ip
+      when: nebula_ip
 
 - name: Updating node configuration zip if not remotely controllable
   hosts: localhost
@@ -21,7 +21,7 @@
           - "{{ nebula_control_dir }}/hosts/{{ node_name }}/host.key"
         dest: "{{ nebula_control_dir }}/hosts/{{ node_name }}/config.zip"
         format: zip
-      when: not public_ip
+      when: not nebula_ip
 
 - name: Syncing configs and restart Nebula service on the target node if remotely managed
   hosts: target_node
