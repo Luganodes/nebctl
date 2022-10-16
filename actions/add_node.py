@@ -56,7 +56,7 @@ def add_node(args):
             "network_config": network_config,
             "ufw": args.ufw,
             "docker_ufw": args.docker_ufw,
-            "groups": ",".join(args.groups),
+            "nebula_groups": ",".join(args.groups),
             "nebula_control_dir": NEBULA_CONTROL_DIR,
         },
     }

@@ -41,7 +41,7 @@ def update_groups(args):
             "ssh_user": target_host.ssh_user,
             "ssh_port": target_host.ssh_port,
             "node_name": node_name,
-            "groups": ",".join(target_groups),
+            "nebula_groups": ",".join(target_groups),
             "nebula_control_dir": NEBULA_CONTROL_DIR,
         },
     }

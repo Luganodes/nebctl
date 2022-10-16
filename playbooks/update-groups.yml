@@ -22,7 +22,7 @@
         - host.key
 
     - name: Sign certificates
-      command: nebula-cert sign -ca-key "{{ nebula_control_dir }}/ca/ca.key" --ca-crt "{{ nebula_control_dir }}/ca/ca.crt" -out-key "{{ nebula_control_dir }}/hosts/{{ node_name }}/host.key" -out-crt "{{ nebula_control_dir }}/hosts/{{ node_name }}/host.crt" -name "{{ node_name }}" -ip "{{ nebula_ip }}/16" -groups "{{ groups }}"
+      command: nebula-cert sign -ca-key "{{ nebula_control_dir }}/ca/ca.key" --ca-crt "{{ nebula_control_dir }}/ca/ca.crt" -out-key "{{ nebula_control_dir }}/hosts/{{ node_name }}/host.key" -out-crt "{{ nebula_control_dir }}/hosts/{{ node_name }}/host.crt" -name "{{ node_name }}" -ip "{{ nebula_ip }}/16" -groups "{{ nebula_groups }}"
 
 - name: Set up target node
   hosts: target_node
@@ -36,4 +36,7 @@
       delegate_to: localhost
 
     - name: Restart nebula service
-      shell: kill -HUP $(pidof nebula)
+      systemd:
+        name: nebula
+        state: restarted
+
