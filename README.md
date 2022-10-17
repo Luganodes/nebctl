@@ -65,26 +65,26 @@ $ sh -c "$(curl -sSfl https://raw.githubusercontent.com/Luganodes/nebctl/master/
 ```
 2. Copy existing CA certificates, if any, to `~/.nebctl/ca`. Otherwise, create one.
 ```sh
-$ cd ~/.nebctl/ca; nebula-cert ca -name "<name>" -duration 43834h
+$ cd ~/.nebctl/ca; nebula-cert ca -name "myOrganization" -duration 43834h
 ```
 
 ### Quickstart
 
 1. Create a lighthouse node
 ```sh
-$ nebctl add lighthouse0 --ip <public_ip> --lighthouse yes
+$ nebctl add myLighthouse0 --ip <public_ip> --lighthouse yes
 ```
 2. Add yourself to the Nebula network as a server node with group admin
 ```sh
-$ nebctl add server0 --ip localhost --groups admin
+$ nebctl add myServer0 --ip localhost --groups admin
 ```
 3. Add another server node to the Nebula network
 ```sh
-$ nebctl add server1 --ip <public_ip>
+$ nebctl add myServer1 --ip <public_ip>
 ```
 4. Access the server node over the Nebula network
 ```sh
-$ ping server1.nebula
+$ ping myServer1.nebula
 ```
 
 
