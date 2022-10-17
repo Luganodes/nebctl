@@ -68,11 +68,11 @@ To get nebctl up and running, follow these steps.
 
 1. Fetch and run the install script
 ```sh
-$ sh -c "$(curl -sSfl https://raw.githubusercontent.com/Luganodes/nebctl/master/install.sh)"
+sh -c "$(curl -sSfl https://raw.githubusercontent.com/Luganodes/nebctl/master/install.sh)"
 ```
 2. Copy existing CA certificates, if any, to `/opt/nebctl/ca`. Otherwise, create one.
 ```sh
-$ cd /opt/nebula-control/ca; nebula-cert ca -name "<name>" -duration 43834h
+cd /opt/nebula-control/ca; nebula-cert ca -name "<name>" -duration 43834h
 ```
 
 
