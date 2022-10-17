@@ -24,6 +24,6 @@ chown -R $USER:$USER $INSTALL_DIR
 chmod +x $INSTALL_DIR/nebctl
 
 # create symlink to script
-ln -s $INSTALL_DIR/nebctl /usr/bin/nebctl
+sudo ln -s $INSTALL_DIR/nebctl /usr/bin/nebctl
 
 echo "Installation complete."
