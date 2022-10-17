@@ -74,17 +74,17 @@ $ cd ~/.nebctl/ca; nebula-cert ca -name "<name>" -duration 43834h
 ```sh
 $ nebctl add lighthouse0 --ip <public_ip> --lighthouse yes
 ```
-2. Add yourself to the Nebula network as a client node with group admin
+2. Add yourself to the Nebula network as a server node with group admin
 ```sh
-$ nebctl add client0 --ip localhost --groups admin
+$ nebctl add server0 --ip localhost --groups admin
 ```
-3. Add a client node to the Nebula network
+3. Add another server node to the Nebula network
 ```sh
-$ nebctl add client1 --ip <public_ip>
+$ nebctl add server1 --ip <public_ip>
 ```
-4. Access the client node over the Nebula network
+4. Access the server node over the Nebula network
 ```sh
-$ ping client1.nebula
+$ ping server1.nebula
 ```
 
 
@@ -171,9 +171,11 @@ $ nebctl generate [-h] [--groups GROUPS [GROUPS ...]] name
 ```
 - `config`: Path to the config.zip distributed by the admin
 
-## Settings
 
-You can change the default domain and IP segment by editing `~/.nebctl/settings.yml`
+## Configuration
+For editing the default domain name and IP segment, check `~/.nebctl/store/settings.yml`.  
+For editing default firewall rules and node configuration options, check `~/.nebctl/defaults/client.yml` and `~/.nebctl/defaults/lighthouse.yml`.
+
 
 ## Roadmap
 - [x] Remote node management
