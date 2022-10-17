@@ -17,7 +17,6 @@ pip install -r $INSTALL_DIR/requirements.txt
 # create required directories
 mkdir -p $INSTALL_DIR/ca
 mkdir -p $INSTALL_DIR/hosts
-mkdir -p $INSTALL_DIR/store
 
 # change ownership of the install dir to current user
 chown -R $USER:$USER $INSTALL_DIR
