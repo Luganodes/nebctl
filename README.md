@@ -76,7 +76,8 @@ $ nebctl add myLighthouse0 --ip <public_ip> --lighthouse yes
 ```
 2. Add yourself to the Nebula network as a client node with group admin
 ```sh
-$ nebctl add myClient0 --ip localhost --groups admin
+$ nebctl generate myClient0 --groups admin
+$ nebctl import <path_to_distributable_config_zip>
 ```
 3. Add a server node to the Nebula network
 ```sh
