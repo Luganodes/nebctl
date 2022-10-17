@@ -74,17 +74,17 @@ $ cd ~/.nebctl/ca; nebula-cert ca -name "myOrganization" -duration 43834h
 ```sh
 $ nebctl add myLighthouse0 --ip <public_ip> --lighthouse yes
 ```
-2. Add yourself to the Nebula network as a server node with group admin
+2. Add yourself to the Nebula network as a client node with group admin
 ```sh
-$ nebctl add myServer0 --ip localhost --groups admin
+$ nebctl add myClient0 --ip localhost --groups admin
 ```
-3. Add another server node to the Nebula network
+3. Add a server node to the Nebula network
 ```sh
-$ nebctl add myServer1 --ip <public_ip>
+$ nebctl add myServer0 --ip <public_ip>
 ```
 4. Access the server node over the Nebula network
 ```sh
-$ ping myServer1.nebula
+$ ping myServer0.nebula
 ```
 
 
