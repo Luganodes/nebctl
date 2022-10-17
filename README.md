@@ -110,7 +110,7 @@ $ nebctl add [-h] --ip IP [--ssh-user SSH_USER] [--ssh-port SSH_PORT]
 - `--ssh-port`: Port on which the client node's SSH server is listening (default: 22)
 - `--nebula-port`: Port on which the client node's Nebula service listens (default: 4242)
 - `--ufw`: Whether or not to add firewall rules on the client (default: yes)
-- `--docker-ufw`: Whether or not the host is exposing services with Docker (default: no)
+- `--docker-ufw`: Whether or not the apply Docker + UFW [fix](https://github.com/chaifeng/ufw-docker) (default: no)
 - `--groups`: Nebula groups to which this node belongs to (default: [])
 
 **NOTE**: The host's SSH key needs to be added to the target client node's authorized_keys list before attempting to add it to the network remotely via the `add` command. In case this is not possible, use the `generate` command to obtain configs for the node and distribute it manually.
