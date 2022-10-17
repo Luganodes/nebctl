@@ -52,17 +52,9 @@ Nebula also comes with a built-in firewall, making it easy to **secure** the net
 To get nebctl up and running, follow these steps.
 
 ### Dependencies
-* pip
-  ```sh
-  # apt install python3-pip
-  ```
-  For other package managers, check https://pip.pypa.io/en/stable/installation/
-
-* unzip
-  ```sh
-  # apt install unzip
-  ```
-  For other package managers, check https://www.tecmint.com/install-zip-and-unzip-in-linux/
+```sh
+# apt install python3-pip unzip
+```
 
 ### Installation
 
@@ -70,9 +62,28 @@ To get nebctl up and running, follow these steps.
 ```sh
 sh -c "$(curl -sSfl https://raw.githubusercontent.com/Luganodes/nebctl/master/install.sh)"
 ```
-2. Copy existing CA certificates, if any, to `/opt/nebctl/ca`. Otherwise, create one.
+2. Copy existing CA certificates, if any, to `~/.nebctl/ca`. Otherwise, create one.
 ```sh
-cd /opt/nebula-control/ca; nebula-cert ca -name "<name>" -duration 43834h
+cd ~/.nebctl/ca; nebula-cert ca -name "<name>" -duration 43834h
+```
+
+### Quickstart
+
+1. Create a lighthouse node
+```sh
+nebctl add lighthouse0 --ip <public_ip> --lighthouse yes
+```
+2. Add yourself to the Nebula network as a client node with group admin
+```sh
+nebctl add client0 --ip localhost --groups admin
+```
+3. Add a client node to the Nebula network
+```sh
+nebctl add client1 --ip <public_ip>
+```
+4. Access the client node over the Nebula network
+```sh
+ping client1.nebula
 ```
 
 
