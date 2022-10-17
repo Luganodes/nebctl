@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-INSTALL_DIR=~/.nebula/
+INSTALL_DIR=~/.nebctl
 REPO_URL="https://github.com/Luganodes/nebctl"
 
 # clone the repository

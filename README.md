@@ -159,6 +159,9 @@ $ nebctl generate [-h] [--groups GROUPS [GROUPS ...]] name
 ```
 - `config`: Path to the config.zip distributed by the admin
 
+## Settings
+
+You can change the default domain and IP segment by editing `~/.nebctl/settings.yml`
 
 ## Roadmap
 - [x] Remote node management
