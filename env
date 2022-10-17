@@ -1,0 +1,9 @@
+#!/bin/sh
+case ":${PATH}:" in
+    *:"/home/v15hv4/.nebctl":*)
+        ;;
+    *)
+        # Prepending path in case a system installed binary must be overwritten
+        export PATH="/home/v15hv4/.nebctl:$PATH"
+        ;;
+esac

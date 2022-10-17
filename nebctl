@@ -157,6 +157,7 @@ if __name__ == "__main__":
         verbosity=True,
         check=False,
         start_at_task=None,
+        timeout=30,
     )
 
     # fire routine based on input command

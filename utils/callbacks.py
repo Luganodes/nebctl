@@ -9,7 +9,11 @@ class ProgressCallback(CallbackBase):
         self.spinner.start()
 
     def playbook_on_task_start(self, name, *args, **kwargs):
+        self.spinner.start()
         self.spinner.text = name
+
+    def playbook_on_vars_prompt(self, varname, private=True, prompt=None, encrypt=None, confirm=False, salt_size=None, salt=None, default=None, unsafe=None):
+        self.spinner.stop()
 
     def warn(self, message):
         self.spinner.warn(message)
