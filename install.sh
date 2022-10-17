@@ -8,7 +8,7 @@ git clone $REPO_URL $INSTALL_DIR
 
 # install nebula if not present already
 if ! command -v nebula &> /dev/null; then
-    wget -c "https://github.com/slackhq/nebula/releases/download/v1.6.0/nebula-linux-amd64.tar.gz" -O - | sudo tar -xz -C /usr/bin/
+    wget -c "https://github.com/slackhq/nebula/releases/download/v1.6.1/nebula-linux-amd64.tar.gz" -O - | sudo tar -xz -C /usr/bin/
 fi
 
 # install python dependencies
