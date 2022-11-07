@@ -73,15 +73,16 @@ def generate_config(args):
     )
 
     # set progress callback
-    progress = callbacks.ProgressCallback()
-    pbex._tqm._stdout_callback = progress
+    # progress = callbacks.ProgressCallback()
+    # pbex._tqm._stdout_callback = progress
 
     # run the playbook
     results = pbex.run()
 
     # print status
     if results != 0:
-        progress.failure("Failed to generate node config!")
+        # progress.failure("Failed to generate node config!")
+        print("Failed to generate node config!")
     else:
         # add host to database
         hosts.add_host(
@@ -91,7 +92,8 @@ def generate_config(args):
             groups=args.groups,
         )
 
-        progress.success("Successfully generated node config!")
+        # progress.success("Successfully generated node config!")
+        print("Successfully generated node config!")
         print(f"Name:               {node_name}")
         print(f"Nebula IP:          {nebula_ip}\n")
         print(

@@ -82,14 +82,16 @@ def edit_config(args):
     )
 
     # set progress callback
-    progress = callbacks.ProgressCallback()
-    pbex._tqm._stdout_callback = progress
+    # progress = callbacks.ProgressCallback()
+    # pbex._tqm._stdout_callback = progress
 
     # run the playbook
     results = pbex.run()
 
     # print status
     if results != 0:
-        progress.failure("Failed to edit node config!")
+        # progress.failure("Failed to edit node config!")
+        print("Failed to edit node config!")
     else:
-        progress.success("Successfully edited node config!")
+        # progress.success("Successfully edited node config!")
+        print("Successfully edited node config!")
