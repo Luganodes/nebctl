@@ -59,14 +59,16 @@ def push_config(args):
     )
 
     # set callback
-    progress = callbacks.ProgressCallback()
-    pbex._tqm._stdout_callback = progress
+    # progress = callbacks.ProgressCallback()
+    # pbex._tqm._stdout_callback = progress
 
     # run the playbook
     results = pbex.run()
 
     # print status
     if results != 0:
-        progress.failure("Failed to sync node config!")
+        # progress.failure("Failed to sync node config!")
+        print("Failed to sync node config!")
     else:
-        progress.success("Successfully synced node config!")
+        # progress.success("Successfully synced node config!")
+        print("Successfully synced node config!")
