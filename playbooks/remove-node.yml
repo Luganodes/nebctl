@@ -45,13 +45,11 @@
       systemd:
         name: systemd-resolved
         state: restarted
-      # ignore_errors: yes
 
     - name: Restarting systemd-networkd
       systemd:
         name: systemd-networkd
         state: restarted
-      # ignore_errors: yes
 
     - name: Deleting Nebula binaries
       file:
@@ -71,4 +69,3 @@
     - name: Resetting UFW rules
       ufw:
         state: reset
-      # ignore_errors: yes
