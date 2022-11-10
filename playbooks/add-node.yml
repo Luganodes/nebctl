@@ -26,8 +26,17 @@
         dest: "{{ nebula_control_dir }}/hosts/{{ node_name }}/config.yml"
 
 
+        
 - name: Setting up target node
   hosts: target_node
+  vars_prompt:
+  - name: "ansible_sudo_pass"
+    prompt: "[sudo] password"
+    private: yes
+  become: yes
+  become_method: community.general.sudosu
+  # become_pass: None
+  # become_flags: "-"
   vars:
     enable_ufw: "{{ ufw | default(true) }}"
     enable_docker_ufw: "{{ docker_ufw | default(false) }}"
@@ -51,6 +60,8 @@
         dest: "/etc/nebula/"
         dest_port: "{{ ssh_port }}"
         mode: push
+        use_ssh_args: yes
+        rsync_path: "echo {{ ansible_sudo_pass }} | sudo -S -u ubuntu rsync"
       delegate_to: localhost
 
     - name: Pushing certs to node
