@@ -5,19 +5,30 @@ from ansible.parsing.dataloader import DataLoader
 from ansible.inventory.manager import InventoryManager
 from ansible.executor.playbook_executor import PlaybookExecutor
 
-from utils import callbacks
+from utils import hosts, settings, callbacks
 
-# method to import node configs
-def import_config(args):
+# method to remove a node
+def remove_node(args):
     NEBULA_CONTROL_DIR = os.environ.get("NEBULA_CONTROL_DIR")
-    PLAYBOOK_SOURCE = [f"{NEBULA_CONTROL_DIR}/playbooks/import-config.yml"]
+    PLAYBOOK_SOURCE = [f"{NEBULA_CONTROL_DIR}/playbooks/remove-node.yml"]
     INVENTORY_SOURCE = [f"{NEBULA_CONTROL_DIR}/store/inventory"]
+
+    # append domain to input name
+    node_name = args.name + "." + settings.get("domain")
+
+    # check if host with the given name exists
+    target_host = hosts.get(node_name)
+    if not target_host:
+        raise Exception(f"A host named '{node_name}' does not exist!")
 
     config = {
         "playbook": PLAYBOOK_SOURCE,
         "inventory": INVENTORY_SOURCE,
         "extra_vars": {
-            "node_config": os.path.abspath(args.config),
+            "public_ip": target_host.public_ip,
+            "ssh_user": target_host.ssh_user,
+            "ssh_port": target_host.ssh_port,
+            "node_name": node_name,
             "nebula_control_dir": NEBULA_CONTROL_DIR,
         },
     }
@@ -47,14 +58,18 @@ def import_config(args):
     )
 
     # set progress callback
-    progress = callbacks.ProgressCallback()
-    pbex._tqm._stdout_callback = progress
+    # progress = callbacks.ProgressCallback()
+    # pbex._tqm._stdout_callback = progress
 
     # run the playbook
     results = pbex.run()
 
     # print status
     if results != 0:
-        progress.failure("Failed to import node config!")
+        # progress.failure("Failed to remove node!")
+        print("failed to remove node")
     else:
-        progress.success("Successfully imported node config!")
+        # remove host from database
+        hosts.delete_host(target_host.id)
+        print("node removed")
+        # progress.success("Successfully removed node!")
