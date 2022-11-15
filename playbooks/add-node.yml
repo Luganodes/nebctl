@@ -35,8 +35,6 @@
     private: yes
   become: yes
   become_method: community.general.sudosu
-  # become_pass: None
-  # become_flags: "-"
   vars:
     enable_ufw: "{{ ufw | default(true) }}"
     enable_docker_ufw: "{{ docker_ufw | default(false) }}"
@@ -54,40 +52,27 @@
         state: directory
         mode: 0755
 
-    - name: Pushing Nebula configs to node
-      synchronize: 
+
+    - name: copy nebula configs to node
+      copy:
         src: "{{ nebula_control_dir }}/hosts/{{ node_name }}/"
         dest: "/etc/nebula/"
-        dest_port: "{{ ssh_port }}"
-        mode: push
-        use_ssh_args: yes
-        rsync_path: "echo {{ ansible_sudo_pass }} | sudo -S -u ubuntu rsync"
-      delegate_to: localhost
 
-    - name: Pushing certs to node
-      synchronize: 
+    - name: copy certs to node
+      copy: 
         src: "{{ nebula_control_dir }}/ca/ca.crt"
         dest: "/etc/nebula"
-        dest_port: "{{ ssh_port }}"
-        mode: push
-      delegate_to: localhost
 
-    - name: Pushing service config to node
-      synchronize: 
+    - name: copy service config to node
+      copy: 
         src: "{{ nebula_control_dir }}/defaults/nebula.service"
-        dest: "/etc/systemd/system"
-        dest_port: "{{ ssh_port }}"
-        mode: push
-      delegate_to: localhost
+        dest: "/etc/systemd/system"        
 
-    - name: Pushing network config to node
-      synchronize: 
+    - name: copy network config to node
+      copy:
         src: "{{ network_config }}"
         dest: "/etc/systemd/network/nebula1.network"
-        dest_port: "{{ ssh_port }}"
-        mode: push
-      delegate_to: localhost
-
+ 
     - name: Restarting systemd-resolved
       systemd:
         name: systemd-resolved
