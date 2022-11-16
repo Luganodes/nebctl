@@ -10,7 +10,7 @@ lighthouse:
   serve_dns: true
   dns:
     host: 
-    port: 5353
+    port: 53
   interval: 60
 
 listen:
@@ -46,7 +46,7 @@ firewall:
     - port: any
       proto: icmp
       host: any
-    - port: 5353
+    - port: 53
       proto: any
       host: any
     - port: any

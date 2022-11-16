@@ -117,3 +117,4 @@ def generate_network_config(destination, node_config):
 
         with open(destination, "w") as cf:
             network_config.write(cf)
+

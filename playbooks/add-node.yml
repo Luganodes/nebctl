@@ -26,8 +26,15 @@
         dest: "{{ nebula_control_dir }}/hosts/{{ node_name }}/config.yml"
 
 
+        
 - name: Setting up target node
   hosts: target_node
+  vars_prompt:
+  - name: "ansible_sudo_pass"
+    prompt: "[sudo] password"
+    private: yes
+  become: yes
+  become_method: community.general.sudosu
   vars:
     enable_ufw: "{{ ufw | default(true) }}"
     enable_docker_ufw: "{{ docker_ufw | default(false) }}"
@@ -35,7 +42,7 @@
     - name: Installing Nebula binaries
       unarchive:
         src: https://github.com/slackhq/nebula/releases/download/v1.6.0/nebula-linux-amd64.tar.gz
-        dest: /usr/bin
+        dest: /usr/local/bin
         mode: 0755
         remote_src: yes
 
@@ -45,47 +52,42 @@
         state: directory
         mode: 0755
 
-    - name: Pushing Nebula configs to node
-      synchronize: 
+    - name: copy nebula configs to node
+      copy:
         src: "{{ nebula_control_dir }}/hosts/{{ node_name }}/"
         dest: "/etc/nebula/"
-        dest_port: "{{ ssh_port }}"
-        mode: push
-      delegate_to: localhost
 
-    - name: Pushing certs to node
-      synchronize: 
+    - name: copy certs to node
+      copy: 
         src: "{{ nebula_control_dir }}/ca/ca.crt"
         dest: "/etc/nebula"
-        dest_port: "{{ ssh_port }}"
-        mode: push
-      delegate_to: localhost
 
-    - name: Pushing service config to node
-      synchronize: 
+    - name: copy service config to node
+      copy: 
         src: "{{ nebula_control_dir }}/defaults/nebula.service"
-        dest: "/etc/systemd/system"
-        dest_port: "{{ ssh_port }}"
-        mode: push
-      delegate_to: localhost
+        dest: "/etc/systemd/system"        
 
-    - name: Pushing network config to node
-      synchronize: 
+    - name: copy network config to node
+      copy:
         src: "{{ network_config }}"
         dest: "/etc/systemd/network/nebula1.network"
-        dest_port: "{{ ssh_port }}"
-        mode: push
-      delegate_to: localhost
-
+ 
     - name: Restarting systemd-resolved
       systemd:
         name: systemd-resolved
-        state: restarted
+        state: "{{ resolved_state }}"
+        enabled: "{{ resolved_enabled }}"
 
     - name: Restarting systemd-networkd
       systemd:
         name: systemd-networkd
         state: restarted
+
+    - name: copy dns config to lighthouse
+      copy:
+        src: "~/.nebctl/defaults/resolv.conf"
+        dest: "/etc/resolv.conf"
+      when: lighthouse | bool
 
     - name: Enabling and starting Nebula service
       systemd:

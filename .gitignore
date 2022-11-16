@@ -1,8 +1,9 @@
 .in
 .out
 .venv/
-
+env
 ca/
 hosts/
 store/db.sqlite
 **/__pycache__/
+.DS_Store

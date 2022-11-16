@@ -47,14 +47,16 @@ def import_config(args):
     )
 
     # set progress callback
-    progress = callbacks.ProgressCallback()
-    pbex._tqm._stdout_callback = progress
+    # progress = callbacks.ProgressCallback()
+    # pbex._tqm._stdout_callback = progress
 
     # run the playbook
     results = pbex.run()
 
     # print status
     if results != 0:
-        progress.failure("Failed to import node config!")
+        # progress.failure("Failed to import node config!")
+        print("Failed to import node config!")
     else:
-        progress.success("Successfully imported node config!")
+        # progress.success("Successfully imported node config!")
+        print("Successfully imported node config!")

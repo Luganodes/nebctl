@@ -21,6 +21,12 @@
 
 - name: Undoing changes on the target node
   hosts: target_nodes
+  vars_prompt:
+  - name: "ansible_sudo_pass"
+    prompt: "[sudo] password"
+    private: yes
+  become: yes
+  become_method: community.general.sudosu
   tasks:
     - name: Disabling and stop Nebula service
       systemd:
@@ -45,11 +51,13 @@
       systemd:
         name: systemd-resolved
         state: restarted
+      ignore_errors: yes
 
     - name: Restarting systemd-networkd
       systemd:
         name: systemd-networkd
         state: restarted
+      ignore_errors: yes
 
     - name: Deleting Nebula binaries
       file:
@@ -69,3 +77,4 @@
     - name: Resetting UFW rules
       ufw:
         state: reset
+      ignore_errors: yes

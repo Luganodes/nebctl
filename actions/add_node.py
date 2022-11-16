@@ -33,8 +33,12 @@ def add_node(args):
     node_config = f"/tmp/{node_name}{int(time.time())}.yml"
     if args.lighthouse:
         configs.generate_lighthouse_config(args.ip, nebula_ip, args.nebula_port, node_config)
+        RESOLVED_STATE="stopped"
+        RESOLVED_ENABLED="no"
     else:
         configs.generate_client_config(args.nebula_port, node_config)
+        RESOLVED_STATE="restarted"
+        RESOLVED_ENABLED="yes"
 
     # generate network config
     network_config = f"/tmp/nebula1{int(time.time())}.network"
@@ -58,6 +62,8 @@ def add_node(args):
             "docker_ufw": args.docker_ufw,
             "nebula_groups": ",".join(args.groups),
             "nebula_control_dir": NEBULA_CONTROL_DIR,
+            "resolved_state": RESOLVED_STATE,
+            "resolved_enabled": RESOLVED_ENABLED,
         },
     }
 
@@ -86,15 +92,15 @@ def add_node(args):
     )
 
     # set progress callback
-    progress = callbacks.ProgressCallback()
-    pbex._tqm._stdout_callback = progress
+    #progress = callbacks.ProgressCallback()
+    #pbex._tqm._stdout_callback = progress
 
     # run the playbook
     results = pbex.run()
 
     # print status
     if results != 0:
-        progress.warn("Error encountered. Rolling back changes...")
+        #progress.warn("Error encountered. Rolling back changes...")
         rollback_pbex = PlaybookExecutor(
             playbooks=config["rollback"],
             inventory=inventory,
@@ -107,10 +113,10 @@ def add_node(args):
         rollback_progress = callbacks.ProgressCallback()
         rollback_pbex._tqm._stdout_callback = rollback_progress
 
-        # run rollback playbook
+        # # run rollback playbook
         rollback_pbex.run()
 
-        rollback_progress.failure("Failed to add node!")
+        #rollback_progress.failure("Failed to add node!")
 
     else:
         hosts.add_host(
@@ -124,7 +130,7 @@ def add_node(args):
             groups=args.groups,
         )
 
-        progress.success("Successfully added node!")
+        #progress.success("Successfully added node!")
         print(f"Host:               {node_name}")
         print(f"Public IP:          {args.ip}")
         print(f"Nebula IP:          {nebula_ip}")

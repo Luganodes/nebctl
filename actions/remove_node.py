@@ -58,16 +58,18 @@ def remove_node(args):
     )
 
     # set progress callback
-    progress = callbacks.ProgressCallback()
-    pbex._tqm._stdout_callback = progress
+    # progress = callbacks.ProgressCallback()
+    # pbex._tqm._stdout_callback = progress
 
     # run the playbook
     results = pbex.run()
 
     # print status
     if results != 0:
-        progress.failure("Failed to remove node!")
+        # progress.failure("Failed to remove node!")
+        print("failed to remove node")
     else:
         # remove host from database
         hosts.delete_host(target_host.id)
-        progress.success("Successfully removed node!")
+        print("node removed")
+        # progress.success("Successfully removed node!")
