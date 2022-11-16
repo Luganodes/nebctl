@@ -69,7 +69,7 @@ $ cd ~/.nebctl/ca; nebula-cert ca -name "myOrganization" -duration 43834h
 ```
 
 ### Quickstart
-
+> Note: nebctl currently supports accessing only using the default ssh-user (root). Access using other users will be supported soon.
 1. Create a lighthouse node
 ```sh
 $ nebctl add myLighthouse0 --ip <public_ip> --lighthouse yes

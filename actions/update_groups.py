@@ -70,15 +70,16 @@ def update_groups(args):
     )
 
     # set progress callback
-    progress = callbacks.ProgressCallback()
-    pbex._tqm._stdout_callback = progress
+    # progress = callbacks.ProgressCallback()
+    # pbex._tqm._stdout_callback = progress
 
     # run the playbook
     results = pbex.run()
 
     # print status
     if results != 0:
-        progress.failure("Failed to update node groups!")
+        # progress.failure("Failed to update node groups!")
+        print("Failed to update node groups!")
     else:
         # update group database
         for group in args.add:
@@ -86,4 +87,5 @@ def update_groups(args):
         for group in args.remove:
             hosts.remove_group(target_host.id, group)
 
-        progress.success("Successfully updated node groups!")
+        # progress.success("Successfully updated node groups!")
+        print("Successfully updated node groups!")
