@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-brew install python3-pip nebula wget
+brew install nebula wget
 INSTALL_DIR=~/.nebctl
 REPO_URL="https://github.com/Luganodes/nebctl"
 
