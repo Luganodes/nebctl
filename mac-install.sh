@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-sudo apt install python3-pip ufw
+brew install python3-pip nebula
 INSTALL_DIR=~/.nebctl
 REPO_URL="https://github.com/Luganodes/nebctl"
 
@@ -8,7 +8,7 @@ git clone $REPO_URL $INSTALL_DIR
 
 # install nebula if not present already
 if ! command -v nebula &> /dev/null; then
-    sudo sh -c 'wget -c "https://github.com/slackhq/nebula/releases/download/v1.6.1/nebula-linux-amd64.tar.gz" -O - | sudo tar -xz -C /usr/bin/'
+    sudo sh -c 'wget -c "https://github.com/slackhq/nebula/releases/download/v1.6.1/nebula-darwin.zip" -O - | sudo tar -xz -C /usr/local/bin/'
 fi
 
 # install python dependencies
@@ -38,8 +38,8 @@ esac
 EOF
 
 # add env to .profile
-cat >> ~/.profile <<EOF
+cat >> ~/.zprofile <<EOF
 source "$INSTALL_DIR/env"
 EOF
 
-printf "\n\nInstallation complete.\nTo use nebctl, you need the install directory ($INSTALL_DIR) to be in your PATH variable. Next time you log in this will be done automatically. To access nebctl in the current shell, run 'source ~/.profile' first.\n"
+printf "\n\nInstallation complete.\nTo use nebctl, you need the install directory ($INSTALL_DIR) to be in your PATH variable. Next time you log in this will be done automatically. To access nebctl in the current shell, run 'source ~/.zprofile' first.\n"
