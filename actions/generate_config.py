@@ -32,8 +32,14 @@ def generate_config(args):
     configs.generate_client_config(4242, node_config)
 
     # generate network config
-    network_config = f"/tmp/nebula1{int(time.time())}.network"
-    configs.generate_network_config(network_config, node_config)
+    if args.mac_os:
+        network_config = f"/tmp/nebula{int(time.time())}"
+    else:
+        network_config = f"/tmp/nebula1{int(time.time())}.network"
+
+    configs.generate_network_config(network_config, node_config, args.mac_os)
+
+
 
     config = {
         "playbook": PLAYBOOK_SOURCE,
@@ -45,6 +51,7 @@ def generate_config(args):
             "network_config": network_config,
             "nebula_groups": ",".join(args.groups),
             "nebula_control_dir": NEBULA_CONTROL_DIR,
+            "mac_os":args.mac_os,
         },
     }
 

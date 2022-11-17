@@ -41,11 +41,25 @@
       copy:
         src: "{{ nebula_control_dir }}/defaults/nebula.service"
         dest: "{{ config_dir }}/defaults/nebula.service"
+      when: not mac_os | bool
+
+    - name: copying mac_os service config
+      copy:
+        src: "{{ nebula_control_dir }}/defaults/nebulad.plist"
+        dest: "{{ config_dir }}/defaults/nebula.service"
+      when: mac_os | bool
 
     - name: Copying network config
       copy:
         src: "{{ network_config }}"
         dest: "{{ config_dir }}/defaults/nebula1.network"
+      when: not mac_os | bool
+
+    - name: Copying network config
+      copy:
+        src: "{{ network_config }}"
+        dest: "{{ config_dir }}/defaults/nebula"
+      when: mac_os | bool
 
     - name: Zipping configs
       archive:

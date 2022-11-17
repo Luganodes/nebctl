@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+	<dict>
+		<key>Label</key>
+		<string>nebulad</string>
+		<key>ProgramArguments</key>
+		<array>
+			<string>/usr/local/bin/nebula</string>
+			<string>-config</string>
+			<string>/etc/nebula/config.yml</string>
+		</array>
+		<key>RunAtLoad</key>
+		<true/>
+		<key>StandardErrorPath</key>
+		<string>/var/log/nebula.log</string>
+		<key>StandardOutPath</key>
+		<string>/var/log/nebula.log</string>
+	</dict>
+</plist>

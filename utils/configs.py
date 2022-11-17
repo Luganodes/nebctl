@@ -14,6 +14,7 @@ NEBULA_CONTROL_DIR = os.environ.get("NEBULA_CONTROL_DIR")
 CLIENT_CONFIG_PATH = f"{NEBULA_CONTROL_DIR}/defaults/client.yml"
 LIGHTHOUSE_CONFIG_PATH = f"{NEBULA_CONTROL_DIR}/defaults/lighthouse.yml"
 NETWORK_CONFIG_PATH = f"{NEBULA_CONTROL_DIR}/defaults/nebula1.network"
+MAC_NETWORK_CONFIG_PATH = f"{NEBULA_CONTROL_DIR}/defaults/nebula"
 
 # load config yml
 def load(path):
@@ -31,7 +32,6 @@ def load(path):
 def dump(config, path):
     with open(path, "w") as yf:
         yaml.dump(config, yf, default_flow_style=False, sort_keys=False)
-
 
 # generate client config by populating it with existing lighthouses
 def generate_client_config(nebula_port, destination):
@@ -88,7 +88,7 @@ def generate_lighthouse_config(public_ip, nebula_ip, nebula_port, destination):
 
 
 # generate network config
-def generate_network_config(destination, node_config):
+def generate_network_config(destination, node_config, mac_os):
     with Session(engine) as session:
         network_config = configparser.ConfigParser()
         network_config.optionxform = str
@@ -115,6 +115,18 @@ def generate_network_config(destination, node_config):
 
         network_config["Network"]["Domains"] = settings.get("domain")
 
-        with open(destination, "w") as cf:
-            network_config.write(cf)
+        if not mac_os:
+            with open(destination, "w") as cf:
+                network_config.write(cf)
+
+        if mac_os:
+            config_string = ""
+            for lighthouse in lighthouses:
+                lighthouse_config = load(f"{NEBULA_CONTROL_DIR}/hosts/{lighthouse.name}/config.yml")[
+                    "lighthouse"
+                        ]
+                if lighthouse_config["serve_dns"]:
+                    config_string+="nameserver "+lighthouse_config['dns']['host']+"\n"
+            with open(destination, "w") as cf:
+                cf.write(config_string)
 

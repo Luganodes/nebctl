@@ -65,6 +65,7 @@ if __name__ == "__main__":
         help="Set up firewall rules on the client node",
         default=True,
     )
+
     add_args.add_argument(
         "--docker-ufw",
         type=bool,
@@ -125,13 +126,24 @@ if __name__ == "__main__":
         help="Add host to group",
         default=[],
     )
+    generate_args.add_argument(
+        "--mac-os",
+        type=bool,
+        help="Set up config in a mac os machine",
+        default=False,
+    )
     # }}}
 
     # `import` arguments {{{
     import_args = subparser.add_parser("import")
     import_args.add_argument("config", type=str, help="Path to node configuration zip")
     # }}}
-
+    import_args.add_argument(
+        "--mac-os",
+        type=bool,
+        help="Set up config in a mac os machine",
+        default=False,
+    )
     args = parser.parse_args()
 
     # initialize ansible locale

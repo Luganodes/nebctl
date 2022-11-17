@@ -1,0 +1,60 @@
+- name: Setting up current mac os node
+  hosts: localhost
+  vars_prompt:
+  - name: "ansible_become_pass"
+    prompt: "[sudo] password"
+    private: yes
+  become: yes
+  become_method: su
+  become_flags: "-"
+  tasks:
+    - name: Creating Nebula config directory
+      file:
+        path: /etc/nebula
+        state: directory
+        mode: 0755
+
+    - name: Unzipping configs
+      unarchive:
+        src: "{{ node_config }}"
+        dest: /tmp
+
+    - name: Copying Nebula configs
+      synchronize:
+        src: /tmp/nebula/
+        dest: /etc/nebula
+
+    - name: copy service config to node
+      copy: 
+        src: "/tmp/defaults/nebulad.plist"
+        dest: "/Library/LaunchDaemons" 
+
+    - name: copy network config to node
+      copy:
+        src: "/tmp/defaults/nebula"
+        dest: "/etc/resolver/nebula"
+
+
+## enable daemon
+    - name: load nebulad service
+      ansible.builtin.shell:
+        cmd: launchctl load /Library/LaunchDaemons/nebulad.plist
+
+    - name: enable nebulad service
+      community.general.launchd:
+        name: nebulad
+        state: enabled
+        state: started
+## enable network dns
+    - name: load nebulad service
+      ansible.builtin.shell:
+        cmd: sudo killall -HUP mDNSResponder
+## configure firewall
+
+    - name: Cleaning up
+      file:
+        path: "{{ item }}"
+        state: absent
+      with_items:
+        - /tmp/nebula
+        - /tmp/defaults
