@@ -46,7 +46,7 @@
     - name: copying mac_os service config
       copy:
         src: "{{ nebula_control_dir }}/defaults/nebulad.plist"
-        dest: "{{ config_dir }}/defaults/nebula.service"
+        dest: "{{ config_dir }}/defaults/nebulad.plist"
       when: mac_os | bool
 
     - name: Copying network config

@@ -69,23 +69,22 @@ $ cd ~/.nebctl/ca; nebula-cert ca -name "myOrganization" -duration 43834h
 ```
 
 ### Quickstart
-> Note: nebctl currently supports accessing only using the default ssh-user (root). Access using other users will be supported soon.
 1. Create a lighthouse node
 ```sh
-$ nebctl add myLighthouse0 --ip <public_ip> --lighthouse yes
+nebctl add myLighthouse0 --ip <public_ip> --lighthouse yes
 ```
 2. Add yourself to the Nebula network as a client node with group admin
 ```sh
-$ nebctl generate myClient0 --groups admin
-$ nebctl import <path_to_distributable_config_zip>
+nebctl generate myClient0 --groups admin
+nebctl import <path_to_distributable_config_zip>
 ```
 3. Add a server node to the Nebula network
 ```sh
-$ nebctl add myServer0 --ip <public_ip>
+nebctl add myServer0 --ip <public_ip>
 ```
 4. Access the server node over the Nebula network
 ```sh
-$ ping myServer0.nebula
+ping myServer0.nebula
 ```
 
 
@@ -161,16 +160,17 @@ $ nebctl groups [-h] [--add ADD [ADD ...]] [--remove REMOVE [REMOVE ...]] name
 
 #### `generate`
 ```sh
-$ nebctl generate [-h] [--groups GROUPS [GROUPS ...]] name
+$ nebctl generate [-h] [--groups GROUPS [GROUPS ...]] [--mac-os yes/no] name
 ```
 - `name`: Name of the client node on this network
 - `--groups`: Nebula groups to which this node belongs to (default: [])
-
+- `--mac-os`: Specify if the target system is a mac-os based system. (Default: no)
 #### `import`
 ```sh
-# nebctl import [-h] config
+nebctl import [-h] [--mac-os yes/no] config
 ```
 - `config`: Path to the config.zip distributed by the admin
+- `--mac-os`: Specify if the target system is a mac-os based system. (Default: no)
 
 
 ## Configuration

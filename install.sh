@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-sudo apt install python3-pip ufw
+sudo apt install python3-pip ufw wget
 INSTALL_DIR=~/.nebctl
 REPO_URL="https://github.com/Luganodes/nebctl"
 
