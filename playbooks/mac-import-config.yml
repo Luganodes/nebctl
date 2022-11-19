@@ -43,8 +43,8 @@
     - name: enable nebulad service
       community.general.launchd:
         name: nebulad
-        state: enabled
-        state: started
+        enabled: yes
+        state: reloaded
 ## enable network dns
     - name: load nebulad service
       ansible.builtin.shell:

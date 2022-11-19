@@ -144,6 +144,18 @@ if __name__ == "__main__":
         help="Set up config in a mac os machine",
         default=False,
     )
+    import_args.add_argument(
+        "--pull-config",
+        type=bool,
+        help="pull config from a remote host and import. (default: false)",
+        default=False,
+    )
+    import_args.add_argument(
+        "--pull-url",
+        type=str,
+        help="the URL to pull the config from",
+        default="",
+    )
     args = parser.parse_args()
 
     # initialize ansible locale

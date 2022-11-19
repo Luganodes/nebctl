@@ -25,3 +25,4 @@ SQLAlchemy==1.4.40
 tabulate==0.8.10
 termcolor==2.0.1
 tomli==2.0.1
+wget==3.2.0

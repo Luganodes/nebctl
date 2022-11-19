@@ -1,4 +1,5 @@
 import os
+import wget
 
 from ansible.vars.manager import VariableManager
 from ansible.parsing.dataloader import DataLoader
@@ -16,11 +17,18 @@ def import_config(args):
         PLAYBOOK_SOURCE = [f"{NEBULA_CONTROL_DIR}/playbooks/import-config.yml"]
     INVENTORY_SOURCE = [f"{NEBULA_CONTROL_DIR}/store/inventory"]
 
+    # Pull configs from online source if specified
+    if args.pull_config:
+        wget.download(args.pull_url, "/tmp")
+        NODE_CONFIG="/tmp/config.zip"
+    else:
+        NODE_CONFIG=args.config
+        
     config = {
         "playbook": PLAYBOOK_SOURCE,
         "inventory": INVENTORY_SOURCE,
         "extra_vars": {
-            "node_config": os.path.abspath(args.config),
+            "node_config": os.path.abspath(NODE_CONFIG),
             "nebula_control_dir": NEBULA_CONTROL_DIR,
         },
     }
