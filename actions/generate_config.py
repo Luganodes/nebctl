@@ -1,5 +1,6 @@
 import os
 import time
+import secrets
 
 from ansible.vars.manager import VariableManager
 from ansible.parsing.dataloader import DataLoader
@@ -39,6 +40,9 @@ def generate_config(args):
 
     configs.generate_network_config(network_config, node_config, args.mac_os)
 
+    # generate random password
+    password_length = 13
+    archive_password = secrets.token_urlsafe(password_length)
 
 
     config = {
@@ -52,6 +56,7 @@ def generate_config(args):
             "nebula_groups": ",".join(args.groups),
             "nebula_control_dir": NEBULA_CONTROL_DIR,
             "mac_os":args.mac_os,
+            "archive_password":archive_password,
         },
     }
 

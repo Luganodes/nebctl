@@ -6,6 +6,10 @@
   - name: "ansible_become_pass"
     prompt: "[sudo] password"
     private: yes
+  vars_prompt:
+  - name: "archive_password"
+    prompt: "archive password"
+    private: yes
   become: yes
   become_method: su
   become_flags: "-"
@@ -24,9 +28,10 @@
         remote_src: yes
 
     - name: Unzipping configs
-      unarchive:
-        src: "{{ node_config }}"
-        dest: /tmp
+      shell: "unzip -P {{ archive_password }} {{ node_config }} -d /tmp/"
+      # unarchive:
+      #   src: "{{ node_config }}"
+      #   dest: /tmp
 
     - name: Copying Nebula configs
       synchronize:

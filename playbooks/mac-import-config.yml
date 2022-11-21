@@ -7,6 +7,10 @@
   become: yes
   become_method: su
   become_flags: "-"
+  vars_prompt:
+  - name: "archive_password"
+    prompt: "archive password"
+    private: yes
   tasks:
     - name: Creating Nebula config directory
       file:
@@ -15,9 +19,10 @@
         mode: 0755
 
     - name: Unzipping configs
-      unarchive:
-        src: "{{ node_config }}"
-        dest: /tmp
+      shell: "unzip -P {{ archive_password }} {{ node_config }} -d /tmp/"
+      # unarchive:
+      #   src: "{{ node_config }}"
+      #   dest: /tmp
 
     - name: Copying Nebula configs
       synchronize:

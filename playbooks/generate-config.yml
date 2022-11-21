@@ -62,7 +62,9 @@
       when: mac_os | bool
 
     - name: Zipping configs
-      archive:
-        path: "{{ config_dir }}/*"
-        dest: "{{ nebula_control_dir }}/hosts/{{ node_name }}/config.zip"
-        format: zip
+      shell: "cd {{ config_dir }} && zip --password {{ archive_password }} -r {{ nebula_control_dir }}/hosts/{{ node_name }}/config.zip ./*"
+
+    - name: saving user password
+      copy:
+        content: "{{ archive_password }}"
+        dest: "{{ nebula_control_dir }}/hosts/{{ node_name }}/pwd"
