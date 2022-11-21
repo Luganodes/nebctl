@@ -10,7 +10,7 @@ lighthouse:
   serve_dns: true
   dns:
     host: 
-    port: 53
+    port: 5354
   interval: 60
 
 listen:

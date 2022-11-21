@@ -130,3 +130,9 @@ def generate_network_config(destination, node_config, mac_os):
             with open(destination, "w") as cf:
                 cf.write(config_string)
 
+
+def generate_dnsmasq_config(domain_name, nebula_ip, nebula_port, destination):
+    config_string = "port=53\nresolv-file=/opt/upstream-dns.conf\nserver="
+    config_string += f"/{domain_name}/{nebula_ip}#{nebula_port}"
+    with open(destination, "w") as cf:
+                cf.write(config_string)

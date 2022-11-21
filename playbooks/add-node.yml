@@ -39,6 +39,12 @@
     enable_ufw: "{{ ufw | default(true) }}"
     enable_docker_ufw: "{{ docker_ufw | default(false) }}"
   tasks:
+    - name: Install dnsmasq on lighthouse
+      ansible.builtin.apt:
+        name: dnsmasq
+        state: present
+      when: lighthouse | bool
+
     - name: Installing Nebula binaries
       unarchive:
         src: https://github.com/slackhq/nebula/releases/download/v1.6.0/nebula-linux-amd64.tar.gz
@@ -61,6 +67,18 @@
       copy: 
         src: "{{ nebula_control_dir }}/ca/ca.crt"
         dest: "/etc/nebula"
+
+    - name: copy dnsmasq config to lighthouse
+      copy:
+        src: "{{ dnsmasq_config }}"
+        dest: "/etc/dnsmasq.conf"
+      when: lighthouse | bool
+
+    - name: copy upstream dns config to lighthouse
+      copy:
+        src: "{{ nebula_control_dir }}/defaults/upstream-dns.conf"
+        dest: "/opt/upstream-dns.conf"
+      when: lighthouse | bool
 
     - name: copy service config to node
       copy: 
@@ -85,7 +103,7 @@
 
     - name: copy dns config to lighthouse
       copy:
-        src: "~/.nebctl/defaults/resolv.conf"
+        src: "{{ nebula_control_dir }}/defaults/resolv.conf"
         dest: "/etc/resolv.conf"
       when: lighthouse | bool
 

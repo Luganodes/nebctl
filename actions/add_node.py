@@ -14,7 +14,6 @@ def add_node(args):
     PLAYBOOK_SOURCE = [f"{NEBULA_CONTROL_DIR}/playbooks/add-node.yml"]
     ROLLBACK_SOURCE = [f"{NEBULA_CONTROL_DIR}/playbooks/remove-node.yml"]
     INVENTORY_SOURCE = [f"{NEBULA_CONTROL_DIR}/store/inventory"]
-
     # append domain to input name
     node_name = args.name + "." + settings.get("domain")
 
@@ -35,6 +34,8 @@ def add_node(args):
         configs.generate_lighthouse_config(args.ip, nebula_ip, args.nebula_port, node_config)
         RESOLVED_STATE="stopped"
         RESOLVED_ENABLED="no"
+        dnsmasq_config="/tmp/dnsmasq.config"
+        configs.generate_dnsmasq_config(settings.get("domain"), nebula_ip, settings.get("nebula_dns_port"), dnsmasq_config)
     else:
         configs.generate_client_config(args.nebula_port, node_config)
         RESOLVED_STATE="restarted"
@@ -42,7 +43,7 @@ def add_node(args):
 
     # generate network config
     network_config = f"/tmp/nebula1{int(time.time())}.network"
-    configs.generate_network_config(network_config, node_config)
+    configs.generate_network_config(network_config, node_config, False)
 
     config = {
         "playbook": PLAYBOOK_SOURCE,
@@ -64,6 +65,7 @@ def add_node(args):
             "nebula_control_dir": NEBULA_CONTROL_DIR,
             "resolved_state": RESOLVED_STATE,
             "resolved_enabled": RESOLVED_ENABLED,
+            "dnsmasq_config": dnsmasq_config,
         },
     }
 

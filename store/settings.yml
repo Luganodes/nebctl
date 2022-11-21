@@ -1,3 +1,4 @@
 nebula_network_ip: 10.121.0.0
 nebula_network_mask: 255.255.0.0
 domain: nebula
+nebula_dns_port: 5354
