@@ -78,6 +78,13 @@ if __name__ == "__main__":
         help="Add host to group",
         default=[],
     )
+
+    add_args.add_argument(
+        "--no-admin",
+        type=bool,
+        help="Deny admin access to machine (Default: False)",
+        default=False,
+    )
     # }}}
 
     # `remove` arguments {{{
@@ -132,30 +139,35 @@ if __name__ == "__main__":
         help="Set up config in a mac os machine",
         default=False,
     )
+    generate_args.add_argument(
+        "--no-admin",
+        type=bool,
+        help="Deny admin access to machine (Default: False)",
+        default=False,
+    )
     # }}}
 
     # `import` arguments {{{
     import_args = subparser.add_parser("import")
     import_args.add_argument("config", type=str, help="Path to node configuration zip")
-    # }}}
     import_args.add_argument(
         "--mac-os",
         type=bool,
         help="Set up config in a mac os machine",
         default=False,
     )
-    import_args.add_argument(
-        "--pull-config",
+    # }}}
+
+    # pull arguments
+    pull_args = subparser.add_parser("pull")
+    pull_args.add_argument("url", type=str, help="The URL from where the configs have to be pulled")
+    pull_args.add_argument(
+        "--mac-os",
         type=bool,
-        help="pull config from a remote host and import. (default: false)",
+        help="Set up config in a mac os machine",
         default=False,
     )
-    import_args.add_argument(
-        "--pull-url",
-        type=str,
-        help="the URL to pull the config from",
-        default="",
-    )
+
     args = parser.parse_args()
 
     # initialize ansible locale
@@ -200,6 +212,8 @@ if __name__ == "__main__":
     elif args.command == "generate":
         generate_config(args)
     elif args.command == "import":
-        import_config(args)
+        import_config(args, False)
+    elif args.command == "pull":
+        import_config(args, True)
     else:
         print(f"Unknown command: {args.command}")

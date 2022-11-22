@@ -34,7 +34,7 @@ def dump(config, path):
         yaml.dump(config, yf, default_flow_style=False, sort_keys=False)
 
 # generate client config by populating it with existing lighthouses
-def generate_client_config(nebula_port, destination):
+def generate_client_config(nebula_port, destination, no_admin):
     with Session(engine) as session:
         config = load(CLIENT_CONFIG_PATH)
         lighthouses_query = select(Host).where(Host.is_lighthouse == True)
@@ -43,6 +43,9 @@ def generate_client_config(nebula_port, destination):
         # set port
         config["listen"]["port"] = nebula_port
 
+        # add admin access if allowed
+        if no_admin:
+            config["firewall"]["inbound"] = [{"port":"any","proto":"icmp","group":"any"}]
         # initialize static host map
         if not config["static_host_map"]:
             config["static_host_map"] = dict()
@@ -101,7 +104,8 @@ def generate_network_config(destination, node_config, mac_os):
         node = load(node_config)["lighthouse"]
         if node["am_lighthouse"]:
             if node["serve_dns"]:
-                network_config["Network"]["DNS"] += f"{node['dns']['host']}:{node['dns']['port']} "
+                # network_config["Network"]["DNS"] += f"{node['dns']['host']}:{node['dns']['port']} "
+                network_config["Network"]["DNS"] += f"{node['dns']['host']} "
 
         # for each lighhouse in db, check if it is serving dns; if yes add to resolvers
         for lighthouse in lighthouses:
@@ -111,7 +115,7 @@ def generate_network_config(destination, node_config, mac_os):
             if lighthouse_config["serve_dns"]:
                 network_config["Network"][
                     "DNS"
-                ] += f"{lighthouse_config['dns']['host']}:{lighthouse_config['dns']['port']} "
+                ] += f"{lighthouse_config['dns']['host']} "
 
         network_config["Network"]["Domains"] = settings.get("domain")
 

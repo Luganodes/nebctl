@@ -30,7 +30,7 @@ def generate_config(args):
 
     # generate default node config assuming default nebula listener port (4242)
     node_config = f"/tmp/{node_name}{int(time.time())}.yml"
-    configs.generate_client_config(4242, node_config)
+    configs.generate_client_config(4242, node_config, args.no_admin)
 
     # generate network config
     if args.mac_os:

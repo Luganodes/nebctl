@@ -7,3 +7,4 @@ hosts/
 store/db.sqlite
 **/__pycache__/
 .DS_Store
+archive/*

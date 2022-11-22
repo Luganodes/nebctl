@@ -37,7 +37,7 @@ def add_node(args):
         dnsmasq_config="/tmp/dnsmasq.config"
         configs.generate_dnsmasq_config(settings.get("domain"), nebula_ip, settings.get("nebula_dns_port"), dnsmasq_config)
     else:
-        configs.generate_client_config(args.nebula_port, node_config)
+        configs.generate_client_config(args.nebula_port, node_config, args.no_admin)
         RESOLVED_STATE="restarted"
         RESOLVED_ENABLED="yes"
 

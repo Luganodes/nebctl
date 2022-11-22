@@ -2,6 +2,5 @@
 Name=nebula1
 
 [Network]
-DHCP=yes
 DNS=
 Domains=

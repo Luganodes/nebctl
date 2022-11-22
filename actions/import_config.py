@@ -9,7 +9,7 @@ from ansible.executor.playbook_executor import PlaybookExecutor
 from utils import callbacks
 
 # method to import node configs
-def import_config(args):
+def import_config(args, pull):
     NEBULA_CONTROL_DIR = os.environ.get("NEBULA_CONTROL_DIR")
     if args.mac_os:
         PLAYBOOK_SOURCE = [f"{NEBULA_CONTROL_DIR}/playbooks/mac-import-config.yml"]
@@ -18,8 +18,8 @@ def import_config(args):
     INVENTORY_SOURCE = [f"{NEBULA_CONTROL_DIR}/store/inventory"]
 
     # Pull configs from online source if specified
-    if args.pull_config:
-        wget.download(args.pull_url, "/tmp")
+    if pull:
+        wget.download(args.url, "/tmp")
         NODE_CONFIG="/tmp/config.zip"
     else:
         NODE_CONFIG=args.config
