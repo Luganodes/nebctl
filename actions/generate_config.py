@@ -67,7 +67,8 @@ def generate_config(args):
             "nebula_control_dir": NEBULA_CONTROL_DIR,
             "mac_os":args.mac_os,
             "archive_password":archive_password,
-            "update_config":args.update_config
+            "update_config":args.update_config,
+            "pull_url":settings.get("pull_url"),
         },
     }
 
@@ -106,7 +107,7 @@ def generate_config(args):
     if results != 0:
         # progress.failure("Failed to generate node config!")
         print("Failed to generate node config!")
-    elif not args.update:
+    elif not args.update_config:
         # add host to database
         hosts.add_host(
             node_name,

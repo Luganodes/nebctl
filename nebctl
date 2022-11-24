@@ -189,15 +189,6 @@ if __name__ == "__main__":
         help="restart services of a mac os machine",
         default=False,
     )
-    restart_args.add_argument(
-        "--ssh-user", type=str, help="User account to SSH into on the client node", default="root"
-    )
-    restart_args.add_argument(
-        "--ssh-port",
-        type=int,
-        help="Port on which sshd is listening on the client node",
-        default=22,
-    )
 
     args = parser.parse_args()
 

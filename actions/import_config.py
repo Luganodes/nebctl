@@ -74,5 +74,12 @@ def import_config(args, pull):
         # progress.failure("Failed to import node config!")
         print("Failed to import node config!")
     else:
+        # set pull URL
+        url_path = f"/etc/nebula/pull_url"
+        url_file = open(url_path, 'r')
+        settings.set("pull_url", url_file.read())
+        url_file.close()
+        
         # progress.success("Successfully imported node config!")
         print("Successfully imported node config!")
+        
