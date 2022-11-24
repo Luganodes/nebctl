@@ -8,3 +8,4 @@ store/db.sqlite
 **/__pycache__/
 .DS_Store
 archive/*
+store/settings.yml
