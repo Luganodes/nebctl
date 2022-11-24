@@ -1,5 +1,6 @@
 import os
 import time
+import secrets
 
 from ansible.vars.manager import VariableManager
 from ansible.parsing.dataloader import DataLoader
@@ -33,17 +34,17 @@ def generate_config(args):
     if not args.update_config:
         node_config = f"/tmp/{node_name}{int(time.time())}.yml"
         configs.generate_client_config(4242, node_config, args.no_admin)
-        # get password
-        passwd_path = f"{NEBULA_CONTROL_DIR}/hosts/{node_name}/pwd"
-        passwd_file = open(passwd_path, 'r')
-        archive_password = passwd_file.read()
+        # generate random password
+        password_length = 13
+        archive_password = secrets.token_urlsafe(password_length)
 
     # choose updated config file
     if args.update_config:
         node_config = f"{NEBULA_CONTROL_DIR}/hosts/{node_name}/config.yml"
-        # generate random password
-        password_length = 13
-        archive_password = secrets.token_urlsafe(password_length)
+        # get password
+        passwd_path = f"{NEBULA_CONTROL_DIR}/hosts/{node_name}/pwd"
+        passwd_file = open(passwd_path, 'r')
+        archive_password = passwd_file.read()
 
     # generate network config
     if args.mac_os:
@@ -105,7 +106,7 @@ def generate_config(args):
     if results != 0:
         # progress.failure("Failed to generate node config!")
         print("Failed to generate node config!")
-    else:
+    elif not args.update:
         # add host to database
         hosts.add_host(
             node_name,

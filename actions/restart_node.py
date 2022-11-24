@@ -12,25 +12,11 @@ def restart_node(args):
     INVENTORY_SOURCE = [f"{NEBULA_CONTROL_DIR}/store/inventory"]
     PLAYBOOK_SOURCE = [f"{NEBULA_CONTROL_DIR}/playbooks/restart_node.yml"]
     
-    # append domain to input name
-    node_name = args.name + "." + settings.get("domain")
-
-    # check if host with the given name exists
-    target_host = hosts.get(node_name)
-    if not target_host:
-        raise Exception(f"A host named '{node_name}' does not exist!")
-
-    # retrieve all groups the node is in
-    target_host = hosts.get(node_name)
     config = {
         
         "playbook": PLAYBOOK_SOURCE,
         "inventory": INVENTORY_SOURCE,
         "extra_vars": {
-            "nebula_ip": target_host.nebula_ip,
-            "ssh_user": target_host.ssh_user,
-            "ssh_port": target_host.ssh_port,
-            "node_name": node_name,
             "nebula_control_dir": NEBULA_CONTROL_DIR,
             "mac_os": args.mac_os
         },

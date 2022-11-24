@@ -19,7 +19,7 @@ def load(path):
 
 # dump settings yml
 def dump(settings, path):
-    with open(path, "r") as yf:
+    with open(path, "w") as yf:
         yaml.dump(settings, yf, default_flow_style=False, sort_keys=False)
 
 

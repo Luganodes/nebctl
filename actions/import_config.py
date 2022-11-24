@@ -24,6 +24,10 @@ def import_config(args, pull):
     else:
         NODE_CONFIG=args.config
         
+    # save password
+    if args.password != "":
+        settings.set("archive_password", args.password)
+
     config = {
         "playbook": PLAYBOOK_SOURCE,
         "inventory": INVENTORY_SOURCE,

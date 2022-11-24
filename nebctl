@@ -163,6 +163,12 @@ if __name__ == "__main__":
         help="Set up config in a mac os machine",
         default=False,
     )
+    import_args.add_argument(
+        "--password",
+        type=str,
+        help="set/change password of your config",
+        default="",
+    )
     # }}}
 
     # pull arguments

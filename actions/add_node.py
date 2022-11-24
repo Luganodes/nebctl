@@ -14,6 +14,7 @@ def add_node(args):
     PLAYBOOK_SOURCE = [f"{NEBULA_CONTROL_DIR}/playbooks/add-node.yml"]
     ROLLBACK_SOURCE = [f"{NEBULA_CONTROL_DIR}/playbooks/remove-node.yml"]
     INVENTORY_SOURCE = [f"{NEBULA_CONTROL_DIR}/store/inventory"]
+    dnsmasq_config=""
     # append domain to input name
     node_name = args.name + "." + settings.get("domain")
 

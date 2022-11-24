@@ -25,14 +25,17 @@
 
 - name: Syncing configs and restart Nebula service on the target node if remotely managed
   hosts: target_node
+  vars_prompt:
+  - name: "ansible_sudo_pass"
+    prompt: "[sudo] password"
+    private: yes
+  become: yes
+  become_method: community.general.sudosu
   tasks:
     - name: Pushing configs to node
-      synchronize: 
+      copy:
         src: "{{ nebula_control_dir }}/hosts/{{ node_name }}/"
         dest: "/etc/nebula/"
-        dest_port: "{{ ssh_port }}"
-        mode: push
-      delegate_to: localhost
 
     - name: Restarting Nebula service
       shell: kill -HUP $(pidof nebula)
