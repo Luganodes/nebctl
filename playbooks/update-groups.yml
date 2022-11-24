@@ -26,14 +26,17 @@
 
 - name: Setting up target node
   hosts: target_node
+  vars_prompt:
+  - name: "ansible_sudo_pass"
+    prompt: "[sudo] password"
+    private: yes
+  become: yes
+  become_method: community.general.sudosu
   tasks:
-    - name: Pushing Nebula configs to node
+    - name: Copy Nebula configs to node
       synchronize: 
         src: "{{ nebula_control_dir }}/hosts/{{ node_name }}/"
         dest: "/etc/nebula/"
-        dest_port: "{{ ssh_port }}"
-        mode: push
-      delegate_to: localhost
 
     - name: Restarting Nebula service
       systemd:

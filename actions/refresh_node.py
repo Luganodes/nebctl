@@ -1,40 +1,42 @@
 import os
-import wget
 
 from ansible.vars.manager import VariableManager
 from ansible.parsing.dataloader import DataLoader
 from ansible.inventory.manager import InventoryManager
 from ansible.executor.playbook_executor import PlaybookExecutor
 
-from utils import callbacks, settings
+from utils import hosts, callbacks, settings
 
-# method to import node configs
-def import_config(args, pull):
+def refresh_node(args):
     NEBULA_CONTROL_DIR = os.environ.get("NEBULA_CONTROL_DIR")
-    if args.mac_os:
-        PLAYBOOK_SOURCE = [f"{NEBULA_CONTROL_DIR}/playbooks/mac-import-config.yml"]
-    else:
-        PLAYBOOK_SOURCE = [f"{NEBULA_CONTROL_DIR}/playbooks/import-config.yml"]
     INVENTORY_SOURCE = [f"{NEBULA_CONTROL_DIR}/store/inventory"]
+    PLAYBOOK_SOURCE = [f"{NEBULA_CONTROL_DIR}/playbooks/refresh_node.yml"]
+    
+    # append domain to input name
+    node_name = args.name + "." + settings.get("domain")
 
-    # Pull configs from online source if specified
-    if pull:
-        wget.download(settings.get("pull_url"), "/tmp")
-        NODE_CONFIG="/tmp/config.zip"
-    else:
-        NODE_CONFIG=args.config
-        
+    # check if host with the given name exists
+    target_host = hosts.get(node_name)
+    if not target_host:
+        raise Exception(f"A host named '{node_name}' does not exist!")
+
+    # retrieve all groups the node is in
+    target_host = hosts.get(node_name)
     config = {
+        
         "playbook": PLAYBOOK_SOURCE,
         "inventory": INVENTORY_SOURCE,
         "extra_vars": {
-            "node_config": os.path.abspath(NODE_CONFIG),
+            "nebula_ip": target_host.nebula_ip,
+            "ssh_user": target_host.ssh_user,
+            "ssh_port": target_host.ssh_port,
+            "node_name": node_name,
             "nebula_control_dir": NEBULA_CONTROL_DIR,
-            "archive_password": settings.get("archive_password"),
+            "mac_os": args.mac_os
         },
     }
 
-    # initialize dataloader
+# initialize dataloader
     loader = DataLoader()
 
     # initialize inventory
@@ -68,7 +70,7 @@ def import_config(args, pull):
     # print status
     if results != 0:
         # progress.failure("Failed to import node config!")
-        print("Failed to import node config!")
+        print("Failed to refresh node")
     else:
         # progress.success("Successfully imported node config!")
-        print("Successfully imported node config!")
+        print("Refreshed node succesfully!")

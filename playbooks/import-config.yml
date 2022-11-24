@@ -6,13 +6,8 @@
   - name: "ansible_become_pass"
     prompt: "[sudo] password"
     private: yes
-  vars_prompt:
-  - name: "archive_password"
-    prompt: "archive password"
-    private: yes
   become: yes
-  become_method: su
-  become_flags: "-"
+  become_method: community.general.sudosu
   tasks:
     - name: Creating Nebula config directory
       file:

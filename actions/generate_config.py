@@ -1,6 +1,5 @@
 import os
 import time
-import secrets
 
 from ansible.vars.manager import VariableManager
 from ansible.parsing.dataloader import DataLoader
@@ -14,23 +13,37 @@ def generate_config(args):
     NEBULA_CONTROL_DIR = os.environ.get("NEBULA_CONTROL_DIR")
     PLAYBOOK_SOURCE = [f"{NEBULA_CONTROL_DIR}/playbooks/generate-config.yml"]
     INVENTORY_SOURCE = [f"{NEBULA_CONTROL_DIR}/store/inventory"]
+    nebula_ip = ""
 
     # append domain to input name
     node_name = args.name + "." + settings.get("domain")
 
-    # check if host with the given name already exists
-    if hosts.get(node_name):
-        raise Exception(f"A host named '{node_name}' already exists!")
+    if not args.update_config:
+        # check if host with the given name already exists
+        if hosts.get(node_name):
+            raise Exception(f"A host named '{node_name}' already exists!")
 
-    # get IP address for new node
-    nebula_ip = ip.generate_nebula_IP(
-        settings.get("nebula_network_ip"),
-        settings.get("nebula_network_mask"),
-    )
+        # get IP address for new node
+        nebula_ip = ip.generate_nebula_IP(
+            settings.get("nebula_network_ip"),
+            settings.get("nebula_network_mask"),
+        )
 
     # generate default node config assuming default nebula listener port (4242)
-    node_config = f"/tmp/{node_name}{int(time.time())}.yml"
-    configs.generate_client_config(4242, node_config, args.no_admin)
+    if not args.update_config:
+        node_config = f"/tmp/{node_name}{int(time.time())}.yml"
+        configs.generate_client_config(4242, node_config, args.no_admin)
+        # get password
+        passwd_path = f"{NEBULA_CONTROL_DIR}/hosts/{node_name}/pwd"
+        passwd_file = open(passwd_path, 'r')
+        archive_password = passwd_file.read()
+
+    # choose updated config file
+    if args.update_config:
+        node_config = f"{NEBULA_CONTROL_DIR}/hosts/{node_name}/config.yml"
+        # generate random password
+        password_length = 13
+        archive_password = secrets.token_urlsafe(password_length)
 
     # generate network config
     if args.mac_os:
@@ -39,10 +52,6 @@ def generate_config(args):
         network_config = f"/tmp/nebula1{int(time.time())}.network"
 
     configs.generate_network_config(network_config, node_config, args.mac_os)
-
-    # generate random password
-    password_length = 13
-    archive_password = secrets.token_urlsafe(password_length)
 
 
     config = {
@@ -57,6 +66,7 @@ def generate_config(args):
             "nebula_control_dir": NEBULA_CONTROL_DIR,
             "mac_os":args.mac_os,
             "archive_password":archive_password,
+            "update_config":args.update_config
         },
     }
 

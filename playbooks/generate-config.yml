@@ -7,14 +7,17 @@
       file:
         path: "{{ nebula_control_dir }}/hosts/{{ node_name }}"
         state: directory
+      when: not update_config
 
     - name: Signing certificates
       command: nebula-cert sign -ca-key "{{ nebula_control_dir }}/ca/ca.key" --ca-crt "{{ nebula_control_dir }}/ca/ca.crt" -out-key "{{ nebula_control_dir }}/hosts/{{ node_name }}/host.key" -out-crt "{{ nebula_control_dir }}/hosts/{{ node_name }}/host.crt" -name "{{ node_name }}" -ip "{{ nebula_ip }}/16" -groups "{{ nebula_groups }}"
+      when: not update_config
 
     - name: Generating node config with lighthouse hosts
       copy:
         src: "{{ node_config }}"
         dest: "{{ nebula_control_dir }}/hosts/{{ node_name }}/config.yml"
+      when: not update_config
 
     - name: Generating temporary config directory name
       set_fact: 
@@ -34,7 +37,10 @@
         src: "{{ item }}"
         dest: "{{ config_dir }}/nebula"
       with_items:
-        - "{{ nebula_control_dir }}/hosts/{{ node_name }}/"
+        - "{{ nebula_control_dir }}/hosts/{{ node_name }}/config.yml"
+        - "{{ nebula_control_dir }}/hosts/{{ node_name }}/host.crt"
+        - "{{ nebula_control_dir }}/hosts/{{ node_name }}/host.key"
+        - "{{ nebula_control_dir }}/hosts/{{ node_name }}/pwd"
         - "{{ nebula_control_dir }}/ca/ca.crt"
 
     - name: Copying service config
@@ -67,7 +73,7 @@
     - name: copy zip to archive folder
       copy:
         src: "{{ nebula_control_dir }}/hosts/{{ node_name }}/config.zip"
-        dest: "{{ nebula_control_dir }}/archive/"
+        dest: "{{ nebula_control_dir }}/archive/{{ node_name }}.zip"
     - name: saving user password
       copy:
         content: "{{ archive_password }}"

@@ -1,16 +1,13 @@
 - name: Setting up current mac os node
   hosts: localhost
+  # vars:
+  #   ansible_python_interpreter: "/usr/bin/python3"
   vars_prompt:
-  - name: "ansible_become_pass"
+  - name: "ansible_sudo_pass"
     prompt: "[sudo] password"
     private: yes
   become: yes
-  become_method: su
-  become_flags: "-"
-  vars_prompt:
-  - name: "archive_password"
-    prompt: "archive password"
-    private: yes
+  become_method: community.general.sudosu
   tasks:
     - name: Creating Nebula config directory
       file:
@@ -20,9 +17,7 @@
 
     - name: Unzipping configs
       shell: "unzip -P {{ archive_password }} {{ node_config }} -d /tmp/"
-      # unarchive:
-      #   src: "{{ node_config }}"
-      #   dest: /tmp
+
 
     - name: Copying Nebula configs
       synchronize:

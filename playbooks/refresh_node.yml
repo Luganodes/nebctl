@@ -1,0 +1,40 @@
+---
+
+- hosts: localhost
+  tasks:
+    - name: Adding target to in-memory inventory
+      add_host:
+        name: "{{ nebula_ip }}"
+        groups: target_node
+        ansible_user: "{{ ssh_user | default('root') }}"
+        ansible_ssh_port: "{{ ssh_port | default(22) }}"
+
+- name: Setting up target node
+  hosts: target_node
+  vars_prompt:
+  - name: "ansible_sudo_pass"
+    prompt: "[sudo] password"
+    private: yes
+  become: yes
+  become_method: community.general.sudosu
+  tasks:
+    - name: refresh services for linux
+      ansible.builtin.systemd:
+        state: restarted
+        name: "{{ item }}"
+      with_items:
+      - systemd-networkd
+      - systemd-resolved
+      - nebula
+      when: not mac_os | bool
+
+    - name: refresh services for mac
+      community.general.launchd:
+        name: nebulad
+        state: restarted
+      when: mac_os | bool
+
+    - name: reload DNS for mac
+      ansible.builtin.shell:
+        cmd: sudo killall -HUP mDNSResponder
+      when: mac_os | bool
