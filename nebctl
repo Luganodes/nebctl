@@ -23,7 +23,7 @@ from actions import (
     update_groups,
     generate_config,
     import_config,
-    refresh_node,
+    restart_node,
 )
 
 
@@ -175,18 +175,18 @@ if __name__ == "__main__":
         default=False,
     )
 
-    refresh_args = subparser.add_parser("refresh")
-    refresh_args.add_argument("name", type=str, help="Name of the client node")
-    refresh_args.add_argument(
+    restart_args = subparser.add_parser("restart")
+    restart_args.add_argument("name", type=str, help="Name of the client node")
+    restart_args.add_argument(
         "--mac-os",
         type=bool,
-        help="Refresh services of a mac os machine",
+        help="restart services of a mac os machine",
         default=False,
     )
-    refresh_args.add_argument(
+    restart_args.add_argument(
         "--ssh-user", type=str, help="User account to SSH into on the client node", default="root"
     )
-    refresh_args.add_argument(
+    restart_args.add_argument(
         "--ssh-port",
         type=int,
         help="Port on which sshd is listening on the client node",
@@ -240,7 +240,7 @@ if __name__ == "__main__":
         import_config(args, False)
     elif args.command == "pull":
         import_config(args, True)
-    elif args.command == "refresh":
-        refresh_node(args)
+    elif args.command == "restart":
+        restart_node(args)
     else:
         print(f"Unknown command: {args.command}")

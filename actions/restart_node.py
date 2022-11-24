@@ -7,10 +7,10 @@ from ansible.executor.playbook_executor import PlaybookExecutor
 
 from utils import hosts, callbacks, settings
 
-def refresh_node(args):
+def restart_node(args):
     NEBULA_CONTROL_DIR = os.environ.get("NEBULA_CONTROL_DIR")
     INVENTORY_SOURCE = [f"{NEBULA_CONTROL_DIR}/store/inventory"]
-    PLAYBOOK_SOURCE = [f"{NEBULA_CONTROL_DIR}/playbooks/refresh_node.yml"]
+    PLAYBOOK_SOURCE = [f"{NEBULA_CONTROL_DIR}/playbooks/restart_node.yml"]
     
     # append domain to input name
     node_name = args.name + "." + settings.get("domain")
@@ -70,7 +70,7 @@ def refresh_node(args):
     # print status
     if results != 0:
         # progress.failure("Failed to import node config!")
-        print("Failed to refresh node")
+        print("Failed to restart node")
     else:
         # progress.success("Successfully imported node config!")
-        print("Refreshed node succesfully!")
+        print("restarted node succesfully!")
