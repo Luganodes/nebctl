@@ -54,6 +54,11 @@ def generate_config(args):
 
     configs.generate_network_config(network_config, node_config, args.mac_os)
 
+    # generate pull_url
+    pull_url = settings.get("pull_url")
+    mod_url = pull_url.split("/")
+    mod_url[-1] = node_name + ".zip"
+    pull_url = "/".join(mod_url)
 
     config = {
         "playbook": PLAYBOOK_SOURCE,
