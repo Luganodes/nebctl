@@ -5,6 +5,7 @@ env
 ca/
 hosts/
 store/db.sqlite
+store/settings.yml
 **/__pycache__/
 .DS_Store
 archive/*
