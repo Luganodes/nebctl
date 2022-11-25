@@ -15,6 +15,12 @@
         state: directory
         mode: 0755
 
+    - name: Creating resolver config directory
+      file:
+        path: /etc/resolver
+        state: directory
+        mode: 0755
+
     - name: Unzipping configs
       shell: "unzip -P {{ archive_password }} {{ node_config }} -d /tmp/"
 
@@ -32,8 +38,11 @@
     - name: copy network config to node
       copy:
         src: "/tmp/defaults/nebula"
-        dest: "/etc/resolver/nebula"
+        dest: "/etc/resolver/{{ domain }}"
 
+    - name: copy bin from /opt/homebrew/bin/nebula* to /usr/local/bin
+      command: cp /opt/homebrew/bin/nebula* /usr/local/bin
+      ignore_errors: yes
 
 ## enable daemon
     - name: load nebulad service

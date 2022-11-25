@@ -35,6 +35,7 @@ def import_config(args, pull):
             "node_config": os.path.abspath(NODE_CONFIG),
             "nebula_control_dir": NEBULA_CONTROL_DIR,
             "archive_password": settings.get("archive_password"),
+            "domain":settings.get("domain")
         },
     }
 

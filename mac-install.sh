@@ -12,7 +12,7 @@ if ! command -v nebula &> /dev/null; then
 fi
 
 # install python dependencies
-pip install -r $INSTALL_DIR/requirements.txt
+pip3 install -r $INSTALL_DIR/requirements.txt
 
 # create required directories
 mkdir -p $INSTALL_DIR/ca

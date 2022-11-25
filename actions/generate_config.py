@@ -73,7 +73,7 @@ def generate_config(args):
             "mac_os":args.mac_os,
             "archive_password":archive_password,
             "update_config":args.update_config,
-            "pull_url":settings.get("pull_url"),
+            "pull_url":pull_url,
         },
     }
 
