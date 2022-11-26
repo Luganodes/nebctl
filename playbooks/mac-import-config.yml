@@ -41,7 +41,8 @@
         dest: "/etc/resolver/{{ domain }}"
 
     - name: copy bin from /opt/homebrew/bin/nebula* to /usr/local/bin
-      command: cp /opt/homebrew/bin/nebula* /usr/local/bin
+      ansible.builtin.shell:
+        cmd: cp /opt/homebrew/bin/nebula* /usr/local/bin
       ignore_errors: yes
 
 ## enable daemon
