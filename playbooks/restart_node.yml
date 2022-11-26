@@ -1,16 +1,7 @@
 ---
 
-- hosts: localhost
-  tasks:
-    - name: Adding target to in-memory inventory
-      add_host:
-        name: "{{ nebula_ip }}"
-        groups: target_node
-        ansible_user: "{{ ssh_user | default('root') }}"
-        ansible_ssh_port: "{{ ssh_port | default(22) }}"
-
 - name: Setting up target node
-  hosts: target_node
+  hosts: localhost
   vars_prompt:
   - name: "ansible_sudo_pass"
     prompt: "[sudo] password"

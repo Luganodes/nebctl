@@ -182,7 +182,6 @@ if __name__ == "__main__":
     )
 
     restart_args = subparser.add_parser("restart")
-    restart_args.add_argument("name", type=str, help="Name of the client node")
     restart_args.add_argument(
         "--mac-os",
         type=bool,
