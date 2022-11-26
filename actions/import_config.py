@@ -28,6 +28,10 @@ def import_config(args, pull):
     if args.password != "":
         settings.set("archive_password", args.password)
 
+    # set domain
+    hostname = args.config.split("/")[-1].rstrip(".zip")
+    domain = ".".join(hostname.split(".")[1:])
+    settings.set("domain", domain)
     config = {
         "playbook": PLAYBOOK_SOURCE,
         "inventory": INVENTORY_SOURCE,
