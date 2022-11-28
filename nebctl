@@ -28,6 +28,11 @@ from actions import (
 
 
 if __name__ == "__main__":
+    # Detect OS
+    if os.uname().sysname == "Darwin":
+        MAC_OS = True
+    else:
+        MAC_OS = False
     # parse arguments
     parser = ArgumentParser()
     subparser = parser.add_subparsers(dest="command")
@@ -138,7 +143,7 @@ if __name__ == "__main__":
         "--mac-os",
         type=bool,
         help="Set up config in a mac os machine",
-        default=False,
+        default=MAC_OS,
     )
     generate_args.add_argument(
         "--no-admin",
@@ -161,7 +166,7 @@ if __name__ == "__main__":
         "--mac-os",
         type=bool,
         help="Set up config in a mac os machine",
-        default=False,
+        default=MAC_OS,
     )
     import_args.add_argument(
         "--password",
@@ -178,7 +183,7 @@ if __name__ == "__main__":
         "--mac-os",
         type=bool,
         help="Set up config in a mac os machine",
-        default=False,
+        default=MAC_OS,
     )
 
     restart_args = subparser.add_parser("restart")
@@ -186,7 +191,7 @@ if __name__ == "__main__":
         "--mac-os",
         type=bool,
         help="restart services of a mac os machine",
-        default=False,
+        default=MAC_OS,
     )
 
     args = parser.parse_args()
