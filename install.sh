@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-sudo apt install python3-pip ufw wget
+
 INSTALL_DIR=~/.nebctl
 REPO_URL="https://github.com/Luganodes/nebctl"
 
@@ -11,8 +11,14 @@ if ! command -v nebula &> /dev/null; then
     sudo sh -c 'wget -c "https://github.com/slackhq/nebula/releases/download/v1.6.1/nebula-linux-amd64.tar.gz" -O - | sudo tar -xz -C /usr/local/bin/'
 fi
 
-# install python dependencies
-pip install -r $INSTALL_DIR/requirements.txt
+# install dependencies
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    brew install nebula wget unzip
+    pip3 install -r requirements.txt
+else
+    sudo apt install python3-pip ufw wget unzip
+    pip install -r $INSTALL_DIR/requirements.txt
+fi
 
 # create required directories
 mkdir -p $INSTALL_DIR/ca
@@ -36,10 +42,17 @@ case ":\${PATH}:" in
         ;;
 esac
 EOF
-
-# add env to .profile
-cat >> ~/.profile <<EOF
-source "$INSTALL_DIR/env"
+# add env to profile
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    profile_path="~/.zprofile"
+    cat >> ~/.zprofile <<EOF
+    source "$INSTALL_DIR/env"
 EOF
+else
+    profile_path="~/.profile"
+    cat >> ~/.profile <<EOF
+    source "$INSTALL_DIR/env"
+EOF
+fi
 
-printf "\n\nInstallation complete.\nTo use nebctl, you need the install directory ($INSTALL_DIR) to be in your PATH variable. Next time you log in this will be done automatically. To access nebctl in the current shell, run 'source ~/.profile' first.\n"
+printf "\n\nInstallation complete.\nTo use nebctl, you need the install directory ($INSTALL_DIR) to be in your PATH variable. Next time you log in this will be done automatically. To access nebctl in the current shell, run 'source ($profile_path)' first.\n"
