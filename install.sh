@@ -16,7 +16,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     brew install nebula wget unzip
     pip3 install -r requirements.txt
 else
-    sudo apt install python3-pip ufw wget unzip
+    sudo apt install python3-pip ufw wget unzip zip
     pip install -r $INSTALL_DIR/requirements.txt
 fi
 
