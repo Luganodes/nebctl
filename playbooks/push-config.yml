@@ -10,18 +10,6 @@
         ansible_ssh_port: "{{ ssh_port | default(22) }}"
       when: nebula_ip
 
-- name: Updating node configuration zip if not remotely controllable
-  hosts: localhost
-  tasks:
-    - name: Updating config zip
-      archive:
-        path: 
-          - "{{ nebula_control_dir }}/hosts/{{ node_name }}/config.yml"
-          - "{{ nebula_control_dir }}/hosts/{{ node_name }}/host.crt"
-          - "{{ nebula_control_dir }}/hosts/{{ node_name }}/host.key"
-        dest: "{{ nebula_control_dir }}/hosts/{{ node_name }}/config.zip"
-        format: zip
-      when: not nebula_ip
 
 - name: Syncing configs and restart Nebula service on the target node if remotely managed
   hosts: target_node
