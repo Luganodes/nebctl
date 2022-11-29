@@ -59,10 +59,15 @@ To get nebctl up and running, follow these steps:
 
 ### Installation
 
-1. Fetch and run the install script
-```sh
-$ sh -c "$(curl -sSfl https://raw.githubusercontent.com/Luganodes/nebctl/master/install.sh)"
-```
+1. Fetch and run the install script<br>
+	a. For Linux Systems
+	```sh
+	$ sh -c "$(curl -sSfl https://raw.githubusercontent.com/Luganodes/nebctl/master/install.sh)"
+	```
+	b. For MacOS systems
+	```sh
+	$ sh -c "$(curl -sSfl https://raw.githubusercontent.com/Luganodes/nebctl/master/mac-install.sh)"
+	```
 2. Copy existing CA certificates, if any, to `~/.nebctl/ca`. Otherwise, create one.
 ```sh
 $ cd ~/.nebctl/ca; nebula-cert ca -name "myOrganization" -duration 43834h
@@ -105,6 +110,8 @@ $ nebctl COMMAND [-h] [--options]
 | **`groups`**            | Manage groups that the target node belongs to.                         |
 | **`generate`**          | Generate distributable configuration files for a new node.             |
 | **`import`**            | Import configuration files and set up the current host as a node.      |
+| **`pull`**              | Pull updated configs from a remote server.      			   |
+| **`restart`**           | Restart nebula along with all services that it depends on.             |
 
 ### Command options and arguments
 ####  `add`
@@ -112,7 +119,7 @@ $ nebctl COMMAND [-h] [--options]
 $ nebctl add [-h] --ip IP [--ssh-user SSH_USER] [--ssh-port SSH_PORT] 
              [--nebula-port NEBULA_PORT] [--lighthouse LIGHTHOUSE]
              [--ufw UFW] [--docker-ufw DOCKER_UFW] 
-             [--groups GROUPS [GROUPS ...]]
+             [--groups GROUPS [GROUPS ...]] [--no-admin NO_ADMIN]
              name
 ```
 - `name`: Name of the client node on this network
@@ -124,6 +131,7 @@ $ nebctl add [-h] --ip IP [--ssh-user SSH_USER] [--ssh-port SSH_PORT]
 - `--ufw`: Whether or not to add firewall rules on the client (default: yes)
 - `--docker-ufw`: Whether or not the apply Docker + UFW [fix](https://github.com/chaifeng/ufw-docker) (default: no)
 - `--groups`: Nebula groups to which this node belongs to (default: [])
+- `--no-admin`: Deny admin access to system. (default: no)
 
 **NOTE**: The host's SSH key needs to be added to the target client node's authorized_keys list before attempting to add it to the network remotely via the `add` command. In case this is not possible, use the `generate` command to obtain configs for the node and distribute it manually.
 
@@ -160,18 +168,18 @@ $ nebctl groups [-h] [--add ADD [ADD ...]] [--remove REMOVE [REMOVE ...]] name
 
 #### `generate`
 ```sh
-$ nebctl generate [-h] [--groups GROUPS [GROUPS ...]] [--mac-os yes/no] name
+$ nebctl generate [-h] [--groups GROUPS [GROUPS ...]] name
 ```
 - `name`: Name of the client node on this network
 - `--groups`: Nebula groups to which this node belongs to (default: [])
-- `--mac-os`: Specify if the target system is a mac-os based system. (Default: no)
+- `--no-admin`: Deny admin access to machine (Default: no)
+- `--update_config`: generate .zip with changes made in existing config files instead of generating new configs (default: no)
 #### `import`
 ```sh
-nebctl import [-h] [--mac-os yes/no] config
+nebctl import [-h] [--no-admin yes/no] [--update-config yes/no] config
 ```
 - `config`: Path to the config.zip distributed by the admin
-- `--mac-os`: Specify if the target system is a mac-os based system. (Default: no)
-
+- `--password`: set/change password of your config
 
 ## Configuration
 For editing the default domain name and IP segment, check `~/.nebctl/store/settings.yml`.  
