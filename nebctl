@@ -185,6 +185,12 @@ if __name__ == "__main__":
         help="Set up config in a mac os machine",
         default=MAC_OS,
     )
+    pull_args.add_argument(
+        "--password",
+        type=str,
+        help="set/change password of your config",
+        default="",
+    )
 
     restart_args = subparser.add_parser("restart")
     restart_args.add_argument(

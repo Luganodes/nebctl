@@ -20,18 +20,20 @@ def import_config(args, pull):
     # Pull configs from online source if specified
     if pull:
         wget.download(settings.get("pull_url"), "/tmp")
-        NODE_CONFIG="/tmp/config.zip"
+        NODE_CONFIG="/tmp/" + settings.get('pull_url').split("/")[-1]
     else:
         NODE_CONFIG=args.config
+
+        # set domain
+        hostname = args.config.split("/")[-1].rstrip(".zip")
+        domain = ".".join(hostname.split(".")[1:])
+        settings.set("domain", domain)
         
     # save password
     if args.password != "":
         settings.set("archive_password", args.password)
 
-    # set domain
-    hostname = args.config.split("/")[-1].rstrip(".zip")
-    domain = ".".join(hostname.split(".")[1:])
-    settings.set("domain", domain)
+
     config = {
         "playbook": PLAYBOOK_SOURCE,
         "inventory": INVENTORY_SOURCE,
