@@ -55,4 +55,4 @@ else
 EOF
 fi
 
-printf "\n\nInstallation complete.\nTo use nebctl, you need the install directory ($INSTALL_DIR) to be in your PATH variable. Next time you log in this will be done automatically. To access nebctl in the current shell, run 'source ($profile_path)' first.\n"
+printf "\n\nInstallation complete.\nTo use nebctl, you need the install directory ($INSTALL_DIR) to be in your PATH variable. Next time you log in this will be done automatically. To access nebctl in the current shell, run 'source $profile_path' first.\n"
