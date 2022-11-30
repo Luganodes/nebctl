@@ -107,10 +107,6 @@ nebctl edit myServer0 --key KEY
 ```
 > Edit nebula configs and then push them to a machine
 
-9. Restart your nebctl client
-```sh
-nebctl restart
-```
 ## Usage
 
 ```sh
