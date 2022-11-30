@@ -51,12 +51,6 @@ Nebula also comes with a built-in firewall, making it easy to **secure** the net
 
 To get nebctl up and running, follow these steps:
 
-### Dependencies
-`nebctl` requires pip and unzip to run.
-```sh
-# apt install python3-pip unzip
-```
-
 ### Quick Start
 
 1. Fetch and run the install script<br>
@@ -64,7 +58,7 @@ To get nebctl up and running, follow these steps:
 $ sh -c "$(curl -sSfl https://raw.githubusercontent.com/Luganodes/nebctl/master/install.sh)"
 ```
 > For macOS and Ubuntu/Debian based systems dependencies will be installed, for other systems, please ensure you have the following dependencies:
-> git, python3, pip, wget, zip, unzip, ufw
+> git, python3, pip, wget, zip, unzip, ufw, git
 
 2. Copy existing CA certificates, if any, to `~/.nebctl/ca`. Otherwise, create one.
 ```sh
