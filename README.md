@@ -57,37 +57,60 @@ To get nebctl up and running, follow these steps:
 # apt install python3-pip unzip
 ```
 
-### Installation
+### Quick Start
 
 1. Fetch and run the install script<br>
 ```sh
 $ sh -c "$(curl -sSfl https://raw.githubusercontent.com/Luganodes/nebctl/master/install.sh)"
 ```
+> For macOS and Ubuntu/Debian based systems dependencies will be installed, for other systems, please ensure you have the following dependencies:
+> git, python3, pip, wget, zip, unzip, ufw
+
 2. Copy existing CA certificates, if any, to `~/.nebctl/ca`. Otherwise, create one.
 ```sh
 $ cd ~/.nebctl/ca; nebula-cert ca -name "myOrganization" -duration 43834h
 ```
 
-### Quickstart
-1. Create a lighthouse node
+3. Create a lighthouse node
 ```sh
 nebctl add myLighthouse0 --ip <public_ip> --lighthouse yes
 ```
-2. Add yourself to the Nebula network as a client node with group admin
+> Ensure you have ssh access to the machine you are deploying to
+
+4. Generate nebctl config for user client
 ```sh
-nebctl generate myClient0 --groups admin
-nebctl import <path_to_distributable_config_zip>
+nebctl generate myClient0 --groups users --no-admin yes
 ```
-3. Add a server node to the Nebula network
+> Note down the password and send the user the config file along with the password
+> for nebctl pull to work, host an http server in the ~/.nebctl/archive folder
+
+5. Import nebctl config on user client machine
 ```sh
-nebctl add myServer0 --ip <public_ip>
+nebctl import <hostname.zip> --password <password>
 ```
-4. Access the server node over the Nebula network
+> make sure the file name is not changed before import
+
+6. Add a server node to the Nebula network
+```sh
+nebctl add myServer0 --ip <public_ip> --groups servers
+```
+> Ensure you have ssh access to the machine you are deploying to
+
+7. Access the server node over the Nebula network
 ```sh
 ping myServer0.nebula
 ```
 
+8. Edit the nebula config
+```sh
+nebctl edit myServer0 --key KEY 
+```
+> Edit nebula configs and then push them to a machine
 
+9. Restart your nebctl client
+```sh
+nebctl restart
+```
 ## Usage
 
 ```sh
