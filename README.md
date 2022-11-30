@@ -47,11 +47,9 @@ Nebula also comes with a built-in firewall, making it easy to **secure** the net
 
 `nebctl` was built to simplify the process of setting up and maintaining a Nebula network by automating most of the steps required. It aims to serve as a seamless, one-click solution for managing a Nebula network.
 
-## Getting Started
+## Quick Start
 
 To get nebctl up and running, follow these steps:
-
-### Quick Start
 
 1. Fetch and run the install script<br>
 ```sh
