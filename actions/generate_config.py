@@ -1,6 +1,7 @@
 import os
 import time
 import secrets
+import string
 
 from ansible.vars.manager import VariableManager
 from ansible.parsing.dataloader import DataLoader
@@ -36,7 +37,9 @@ def generate_config(args):
         configs.generate_client_config(4242, node_config, args.no_admin)
         # generate random password
         password_length = 13
-        archive_password = secrets.token_urlsafe(password_length)
+        alphabet = string.ascii_letters + string.digits
+        archive_password = ''.join(secrets.choice(alphabet) for i in range(13))
+
 
     # choose updated config file
     if args.update_config:
