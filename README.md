@@ -47,24 +47,16 @@ Nebula also comes with a built-in firewall, making it easy to **secure** the net
 
 `nebctl` was built to simplify the process of setting up and maintaining a Nebula network by automating most of the steps required. It aims to serve as a seamless, one-click solution for managing a Nebula network.
 
-## Getting Started
+## Quick Start
 
 To get nebctl up and running, follow these steps:
-
-### Dependencies
-`nebctl` requires pip and unzip to run.
-```sh
-# apt install python3-pip unzip
-```
-
-### Quick Start
 
 1. Fetch and run the install script<br>
 ```sh
 $ sh -c "$(curl -sSfl https://raw.githubusercontent.com/Luganodes/nebctl/master/install.sh)"
 ```
 > For macOS and Ubuntu/Debian based systems dependencies will be installed, for other systems, please ensure you have the following dependencies:
-> git, python3, pip, wget, zip, unzip, ufw
+> git, python3, pip, wget, zip, unzip, ufw, git
 
 2. Copy existing CA certificates, if any, to `~/.nebctl/ca`. Otherwise, create one.
 ```sh
@@ -81,7 +73,7 @@ nebctl add myLighthouse0 --ip <public_ip> --lighthouse yes
 ```sh
 nebctl generate myClient0 --groups users --no-admin yes
 ```
-> Note down the password and send the user the config file along with the password
+> Note down the password and send the user the config file along with the password <br>
 > for nebctl pull to work, host an http server in the ~/.nebctl/archive folder
 
 5. Import nebctl config on user client machine
@@ -107,10 +99,6 @@ nebctl edit myServer0 --key KEY
 ```
 > Edit nebula configs and then push them to a machine
 
-9. Restart your nebctl client
-```sh
-nebctl restart
-```
 ## Usage
 
 ```sh
