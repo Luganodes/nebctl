@@ -75,7 +75,7 @@ nebctl add myLighthouse0 --ip <public_ip> --lighthouse yes
 ```sh
 nebctl generate myClient0 --groups users --no-admin yes
 ```
-> Note down the password and send the user the config file along with the password
+> Note down the password and send the user the config file along with the password <br>
 > for nebctl pull to work, host an http server in the ~/.nebctl/archive folder
 
 5. Import nebctl config on user client machine
