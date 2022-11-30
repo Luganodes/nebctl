@@ -125,6 +125,7 @@ def generate_config(args):
         print("Successfully generated node config!")
         print(f"Name:               {node_name}")
         print(f"Nebula IP:          {nebula_ip}\n")
+        print(f"client password:    {archive_password}\n")
         print(
             f"Distributable config zip stored at: {NEBULA_CONTROL_DIR}/hosts/{node_name}/config.zip"
         )
