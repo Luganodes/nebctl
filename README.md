@@ -74,7 +74,8 @@ nebctl add myLighthouse0 --ip <public_ip> --lighthouse yes
 nebctl generate myClient0 --groups users --no-admin yes
 ```
 > Note down the password and send the user the config file along with the password <br>
-> for nebctl pull to work, host an http server in the ~/.nebctl/archive folder
+> for nebctl 
+to work, host an http server in the ~/.nebctl/archive folder
 
 5. Import nebctl config on user client machine
 ```sh
@@ -174,18 +175,32 @@ $ nebctl groups [-h] [--add ADD [ADD ...]] [--remove REMOVE [REMOVE ...]] name
 
 #### `generate`
 ```sh
-$ nebctl generate [-h] [--groups GROUPS [GROUPS ...]] name
+$ nebctl generate name [-h] [--groups GROUPS [GROUPS ...]] [--mac-os yes/no]
 ```
 - `name`: Name of the client node on this network
 - `--groups`: Nebula groups to which this node belongs to (default: [])
 - `--no-admin`: Deny admin access to machine (Default: no)
 - `--update_config`: generate .zip with changes made in existing config files instead of generating new configs (default: no)
+- `--mac-os`: specify if the target machine is macOS or not
 #### `import`
 ```sh
-nebctl import [-h] [--no-admin yes/no] [--update-config yes/no] config
+nebctl import [-h] config [--no-admin yes/no] [--update-config yes/no] [--mac-os yes/no]
 ```
 - `config`: Path to the config.zip distributed by the admin
 - `--password`: set/change password of your config
+- `--mac-os`: specify if the target machine is macOS or not
+
+#### `restart`
+```sh
+nebctl restart [-h] [--mac-os yes/no]
+```
+- `--mac-os`: specify if the target machine is macOS or not
+
+#### `pull`
+```sh
+nebctl pull [-h] [--password PASSWORD] [--mac-os yes/no]
+```
+- `--password`: set/change password for archive
 
 ## Configuration
 For editing the default domain name and IP segment, check `~/.nebctl/store/settings.yml`.  
