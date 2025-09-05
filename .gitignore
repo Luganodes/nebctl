@@ -1,12 +1,32 @@
+# Python cache
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+.venv/
+env/
+ENV/
+venv/
+
+# OS junk
+.DS_Store
+
+# Ansible specific
+*.retry
+hosts/
+archive/*
+ca/
+
+# Local state & secrets
 .in
 .out
-.venv/
-env
-ca/
-hosts/
 store/db.sqlite
 store/settings.yml
-**/__pycache__/
-.DS_Store
-archive/*
-store/settings.yml
+
+# Editor/IDE configs
+*.swp
+*.swo
+.idea/
+.vscode/
